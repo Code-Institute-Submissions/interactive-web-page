@@ -28,12 +28,13 @@
 
     <title>Document</title>
 </head>
-<body>
+<body onload="innit()">
     <header>
         <h1>Dig UP!</h1>
         <span>Archeology-base memory game.</span>
     </header>
     <main>
+        <span id="output">Output:</span>
         <canvas id="Window">This element is unsupported.</canvas>
     </main>
     <footer>
@@ -42,10 +43,39 @@
 
 
     <script>
-        var canvas = document.getElementById("Window");
-        var ctx = canvas.getContext("2d");
+        x = 0;
+        y = 0;
 
-        
+        function innit() {
+            canvas = document.getElementById("Window");
+            ctx = canvas.getContext("2d");
+
+            document.addEventListener("keydown", keyDown);
+            document.addEventListener("keyup", keyUp);
+
+            setInterval(main, 20);
+            setInterval(draw, 20);
+        }
+
+        function main() {
+            x += 1;
+            y += 1
+        }   
+
+        function keyDown() {
+            document.getElementById("output").innerHTML = true;
+        }
+
+        function keyUp() {
+            document.getElementById("output").innerHTML = false;
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "#00B33C";
+            ctx.fillRect(x, y, 10, 10);
+        }
     </script>
 </body>
 </html>
