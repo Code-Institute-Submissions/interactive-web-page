@@ -52,22 +52,28 @@
 
             document.addEventListener("keydown", keyDown);
             document.addEventListener("keyup", keyUp);
+            document.addEventListener("click", click);
+
+            // array for tile gen
 
             setInterval(main, 20);
             setInterval(draw, 20);
         }
 
         function main() {
-            x += 1;
-            y += 1
+            
         }   
 
         function keyDown() {
-            document.getElementById("output").innerHTML = true;
+            document.getElementById("output").innerHTML = "Key Down";
         }
 
         function keyUp() {
-            document.getElementById("output").innerHTML = false;
+            document.getElementById("output").innerHTML = "Key Up";
+        }
+
+        function click() {
+            document.getElementById("output").innerHTML = "Mouse Click";
         }
 
         function draw() {
