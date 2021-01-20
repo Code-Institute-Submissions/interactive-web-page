@@ -14,12 +14,12 @@
             width: 100%;
             height: 100%;
             border: 1px black solid;
+            overflow-y: hidden;
+            overflow-x: hidden;
         }
         header {
             text-align: center;
-        }
-        nav {
-            border: 1px solid black;
+
         }
         nav > a {
             border: 1px solid black;
@@ -47,7 +47,7 @@
 
 
     <script>
-        var canvas = document.getElementByID("Window");
+        var canvas = document.getElementById("Window");
         var ctx = canvas.getContext("2d");
 
         ctx.fillStyle = "#FF0000";
