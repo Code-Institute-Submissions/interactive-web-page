@@ -43,8 +43,12 @@
 
 
     <script>
-        x = 2;
-        z = 2;
+        mx = 2;
+        mz = 2;
+        vx, vz = 0;
+
+        ox = 2;
+        oz = 2;
 
         function innit() {
             canvas = document.getElementById("Window");
@@ -61,29 +65,69 @@
         }
 
         function main() {
-            map_Render(100, 100, x, z, 10, 10);
+            clear();
+            map_Render(100, 100, ox, oz, 10, 10);
+
+            document.getElementById("output").innerHTML = String(mx+", "+mz);
+
+            if (vx != 0) {
+                mx += vx;
+            }
+            if (vz != 0) {
+                mz += vz;
+            }
         }
 
         function map_Render(maxX, maxZ, cx, cz, size_x, size_z) {
-            this.maxX = maxX + cx
-            this.maxZ = maxZ + cz
+            this.maxX = maxX + cx;
+            this.maxZ = maxZ + cz;
             for (x = cx; x < maxX; x++) {
                 for (z = cz; z < maxZ; z++) {
-                    draw(1, false, "", x*size_x, z*size_z, size_x, size_z);
+                    draw(1, true, "#00FF00", x*size_x, z*size_z, size_x, size_z);
                 }
             }
         }
 
         function keyDown() {
-            document.getElementById("output").innerHTML = "Key Down";
+            // document.getElementById("output").innerHTML = event.keyCode;
+
+            var keyCode = event.keyCode;
+
+            if (keyCode == 87) {
+                vz = 1;
+            }
+            if (keyCode == 65) {
+                vx = -1;
+            }
+            if (keyCode == 68) {
+                vx = 1;
+            }
+            if (keyCode == 83) {
+                vz = -1;
+            }
         }
 
         function keyUp() {
-            document.getElementById("output").innerHTML = "Key Up";
+            // document.getElementById("output").innerHTML = "Key Up";
+
+            var keyCode = event.keyCode;
+
+            if (keyCode == 87) {
+                vz = 0;
+            }
+            if (keyCode == 65) {
+                vx = 0;
+            }
+            if (keyCode == 68) {
+                vx = 0;
+            }
+            if (keyCode == 83) {
+                vz = 0;
+            }
         }
 
         function click() {
-            document.getElementById("output").innerHTML = "Mouse Click";
+            // document.getElementById("output").innerHTML = "Mouse Click";
         }
 
         function draw(type, fill, color, x, y, size_x, size_y) {
