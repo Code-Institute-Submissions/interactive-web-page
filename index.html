@@ -12,7 +12,7 @@
         }
         canvas {
             width: 100%;
-            height: 100%;
+            height: auto;
             border: 1px black solid;
             overflow-y: hidden;
             overflow-x: hidden;
@@ -43,8 +43,8 @@
 
 
     <script>
-        x = 0;
-        y = 0;
+        x = 2;
+        z = 2;
 
         function innit() {
             canvas = document.getElementById("Window");
@@ -61,8 +61,18 @@
         }
 
         function main() {
-            
-        }   
+            map_Render(100, 100, x, z, 10, 10);
+        }
+
+        function map_Render(maxX, maxZ, cx, cz, size_x, size_z) {
+            this.maxX = maxX + cx
+            this.maxZ = maxZ + cz
+            for (x = cx; x < maxX; x++) {
+                for (z = cz; z < maxZ; z++) {
+                    draw(1, false, "", x*size_x, z*size_z, size_x, size_z);
+                }
+            }
+        }
 
         function keyDown() {
             document.getElementById("output").innerHTML = "Key Down";
@@ -76,11 +86,29 @@
             document.getElementById("output").innerHTML = "Mouse Click";
         }
 
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        function draw(type, fill, color, x, y, size_x, size_y) {
+            ctx.beginPath();
 
-            ctx.fillStyle = "#00B33C";
-            ctx.fillRect(x, y, 10, 10);
+            if (type == 1 && fill == false) {
+                ctx.rect(x, y, size_x, size_y);
+            }
+            if (color != "") {
+                if (type == 1 && fill == true) {
+                    ctx.fillStyle = color;
+                    ctx.fillRect(x, y, size_x, size_y);
+            }
+            }
+
+
+            if (fill == true && color == "") {
+                ctx.fill();
+            }
+
+            ctx.stroke()
+        }
+        
+        function clear() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
     </script>
 </body>
