@@ -45,7 +45,11 @@
     <script>
         mx = 2;
         mz = 2;
-        vx, vz = 0;
+        vx = 0;
+        vz = 0;
+
+        MapX = 100;
+        MapZ = 100;
 
         ox = 2;
         oz = 2;
@@ -60,32 +64,87 @@
 
             // array for tile gen
 
+            map = map_Gen(1, 100, 0, MaxX, MaxZ);
+
             setInterval(main, 20);
             setInterval(draw, 20);
         }
 
         function main() {
             clear();
-            map_Render(100, 100, ox, oz, 10, 10);
+            map_Render((MapX+ox), (MapZ+oz), (ox-mx), (oz-mz), 10, 10);
 
-            document.getElementById("output").innerHTML = String(mx+", "+mz);
-
-            if (vx != 0) {
+            if (vx != 0 && (mx+vx > oz-1 && mx+vx <  MapX+ox-1)) {
                 mx += vx;
             }
-            if (vz != 0) {
+            if (vz != 0 && (mz+vz > oz-1 && mz+vz < MapZ+oz-1)) {
                 mz += vz;
             }
         }
 
         function map_Render(maxX, maxZ, cx, cz, size_x, size_z) {
-            this.maxX = maxX + cx;
-            this.maxZ = maxZ + cz;
+            temp_x = 0;
+            temp_z = 0;
             for (x = cx; x < maxX; x++) {
                 for (z = cz; z < maxZ; z++) {
-                    draw(1, true, "#00FF00", x*size_x, z*size_z, size_x, size_z);
+                    draw(1, true, "hsl(210, 100%, 40%)", x*size_x, z*size_z, size_x, size_z);
                 }
             }
+        }
+
+        function map_Gen(gradient, MaxV, MinV, MaxX, MaxZ) {
+            var gen = [];
+            var temp_gen = [];
+            n = 0;
+
+            // Initializer
+            for (x = 0; x < MaxX; x++) {
+                for (z = 0; z < MaxZ; z++) {
+                    temp_gen.push(0);
+                }
+                gen.push(temp_gen);
+                temp_gen = [];
+            }
+
+            for (x = 0; x < MaxX; x++) {
+                for (z = 0; z < MaxZ; z++) {
+                    r = Math.random()*4;
+                    diff = 0;
+                    if (Math.round(r) == 0) {
+                        diff = gradient * -1;
+                    }
+                    if (Math.round(r) == 1) {
+                        diff = 0;
+                    }
+                    if (Math.round(r) == 2) {
+                        diff = gradient;
+                    }
+
+                    for (t = 0; t < 5; t ++) {
+                        if (gen[x][z]+diff > 100 && gen[x][z]+diff < 0) {
+                            gen[x][z] = gen[x][z]+diff;
+                        }
+                        if (x-1 > 0 && x+1 < MaxX) {
+                            if (t == 1 && gen[x-1][z]+diff > 100 && gen[x-1][z]+diff < 0) {
+                                gen[x-1][z] = gen[x-1][z]+diff;
+                            }
+                            if (t == 2 && gen[x+1][z]+diff > 100 && gen[x+1][z]+diff < 0) {
+                                gen[x+1][z] = gen[x+1][z]+diff;
+                            }
+                        }
+
+                        if (z-1 > 0 && z+1  < MaxZ) {
+                            if (t == 3 && x > 0 && gen[x][z-1]+diff > 100 && gen[x][z-1]+diff < 0) {
+                                gen[x][z-1] = gen[x][z-1]+diff;
+                            }
+                            if (t == 4 && x > 0 && gen[x][z+1]+diff > 100 && gen[x][z+1]+diff < 0) {
+                                gen[x][z] = gen[x][z]+diff;
+                            }
+                        }
+                    }
+                }
+            }
+            return gen;
         }
 
         function keyDown() {
