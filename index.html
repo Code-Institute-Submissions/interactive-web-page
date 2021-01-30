@@ -48,8 +48,8 @@
         vx = 0;
         vz = 0;
 
-        MapX = 100;
-        MapZ = 100;
+        MapX = 10;
+        MapZ = 10;
 
         ox = 2;
         oz = 2;
@@ -64,7 +64,7 @@
 
             // array for tile gen
 
-            map = map_Gen(1, 100, 0, MaxX, MaxZ);
+            map = new map_Gen(8, 100, 0, MapX, MapZ);
 
             setInterval(main, 20);
             setInterval(draw, 20);
@@ -73,6 +73,8 @@
         function main() {
             clear();
             map_Render((MapX+ox), (MapZ+oz), (ox-mx), (oz-mz), 10, 10);
+
+            document.getElementById("output").innerHTML = String(X, Z);
 
             if (vx != 0 && (mx+vx > oz-1 && mx+vx <  MapX+ox-1)) {
                 mx += vx;
@@ -87,15 +89,19 @@
             temp_z = 0;
             for (x = cx; x < maxX; x++) {
                 for (z = cz; z < maxZ; z++) {
-                    draw(1, true, "hsl(210, 100%, 40%)", x*size_x, z*size_z, size_x, size_z);
+                    if (map[temp_x][temp_z] < 5) {
+                        color = "hsl(210, 100%, "+map[x][z]+"%)";
+                    }
+                    draw(1, true, color, x*size_x, z*size_z, size_x, size_z);
+                    temp_z += 1
                 }
+                temp_x += 1
             }
         }
 
         function map_Gen(gradient, MaxV, MinV, MaxX, MaxZ) {
             var gen = [];
             var temp_gen = [];
-            n = 0;
 
             // Initializer
             for (x = 0; x < MaxX; x++) {
@@ -119,26 +125,27 @@
                     if (Math.round(r) == 2) {
                         diff = gradient;
                     }
+                    
+                    if (gen[x][z]+diff < 100 && gen[x][z]+diff > 0) {
+                        gen[x][z] += diff;
+                    }
 
-                    for (t = 0; t < 5; t ++) {
-                        if (gen[x][z]+diff > 100 && gen[x][z]+diff < 0) {
-                            gen[x][z] = gen[x][z]+diff;
-                        }
+                    for (t = 0; t < 4; t ++) {
                         if (x-1 > 0 && x+1 < MaxX) {
-                            if (t == 1 && gen[x-1][z]+diff > 100 && gen[x-1][z]+diff < 0) {
-                                gen[x-1][z] = gen[x-1][z]+diff;
+                            if (t == 0 && gen[x-1][z]+diff < 100 && gen[x-1][z]+diff > 0) {
+                                gen[x-1][z] +=diff;
                             }
-                            if (t == 2 && gen[x+1][z]+diff > 100 && gen[x+1][z]+diff < 0) {
-                                gen[x+1][z] = gen[x+1][z]+diff;
+                            if (t == 1 && gen[x+1][z]+diff < 100 && gen[x+1][z]+diff > 0) {
+                                gen[x+1][z] += diff;
                             }
                         }
 
                         if (z-1 > 0 && z+1  < MaxZ) {
-                            if (t == 3 && x > 0 && gen[x][z-1]+diff > 100 && gen[x][z-1]+diff < 0) {
-                                gen[x][z-1] = gen[x][z-1]+diff;
+                            if (t == 2 && gen[x][z-1]+diff < 100 && gen[x][z-1]+diff > 0) {
+                                gen[x][z-1] += diff;
                             }
-                            if (t == 4 && x > 0 && gen[x][z+1]+diff > 100 && gen[x][z+1]+diff < 0) {
-                                gen[x][z] = gen[x][z]+diff;
+                            if (t == 3 && gen[x][z+1]+diff < 100 && gen[x][z+1]+diff > 0) {
+                                gen[x][z+1] += diff;
                             }
                         }
                     }
@@ -186,7 +193,7 @@
         }
 
         function click() {
-            // document.getElementById("output").innerHTML = "Mouse Click";
+            document.getElementById("output").innerHTML = "Mouse Click";
         }
 
         function draw(type, fill, color, x, y, size_x, size_y) {
@@ -199,7 +206,7 @@
                 if (type == 1 && fill == true) {
                     ctx.fillStyle = color;
                     ctx.fillRect(x, y, size_x, size_y);
-            }
+                }
             }
 
 
