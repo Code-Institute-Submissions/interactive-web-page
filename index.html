@@ -72,9 +72,9 @@
 
         function main() {
             clear();
-            map_Render((MapX+ox), (MapZ+oz), (ox-mx), (oz-mz), 10, 10);
+            map_Render((MapX+ox), (MapZ+oz), (ox-mx), (oz-mz), 10, 10)
 
-            document.getElementById("output").innerHTML = String(X, Z);
+            document.getElementById("output").innerHTML = String(map);
 
             if (vx != 0 && (mx+vx > oz-1 && mx+vx <  MapX+ox-1)) {
                 mx += vx;
@@ -89,9 +89,10 @@
             temp_z = 0;
             for (x = cx; x < maxX; x++) {
                 for (z = cz; z < maxZ; z++) {
-                    if (map[temp_x][temp_z] < 5) {
-                        color = "hsl(210, 100%, "+map[x][z]+"%)";
-                    }
+                    color = "hsl(210, 100%, "+map[x][z]+"%)";
+                    // if (map[temp_x][temp_z] < 5) {
+                        
+                    // }
                     draw(1, true, color, x*size_x, z*size_z, size_x, size_z);
                     temp_z += 1
                 }
@@ -106,7 +107,7 @@
             // Initializer
             for (x = 0; x < MaxX; x++) {
                 for (z = 0; z < MaxZ; z++) {
-                    temp_gen.push(0);
+                    temp_gen.push(10);
                 }
                 gen.push(temp_gen);
                 temp_gen = [];
@@ -133,18 +134,22 @@
                     for (t = 0; t < 4; t ++) {
                         if (x-1 > 0 && x+1 < MaxX) {
                             if (t == 0 && gen[x-1][z]+diff < 100 && gen[x-1][z]+diff > 0) {
+                                gen[x-1][z] = Math.round((gen[x][z]+gen[x-1][z])/2);
                                 gen[x-1][z] +=diff;
                             }
                             if (t == 1 && gen[x+1][z]+diff < 100 && gen[x+1][z]+diff > 0) {
+                                gen[x+1][z] = Math.round((gen[x][z]+gen[x+1][z])/2);
                                 gen[x+1][z] += diff;
                             }
                         }
 
                         if (z-1 > 0 && z+1  < MaxZ) {
                             if (t == 2 && gen[x][z-1]+diff < 100 && gen[x][z-1]+diff > 0) {
+                                gen[x][z-1] = Math.round((gen[x][z]+gen[x][z-1])/2);
                                 gen[x][z-1] += diff;
                             }
                             if (t == 3 && gen[x][z+1]+diff < 100 && gen[x][z+1]+diff > 0) {
+                                gen[x][z+1] = Math.round((gen[x][z]+gen[x][z+1])/2);
                                 gen[x][z+1] += diff;
                             }
                         }
