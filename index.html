@@ -43,16 +43,20 @@
 
 
     <script>
-        mx = 2;
-        mz = 2;
+        game_state = 0;
+        mx = 0;
+        mz = 0;
         vx = 0;
         vz = 0;
 
-        MapX = 10;
-        MapZ = 10;
+        MapX = 100;
+        MapZ = 100;
 
-        ox = 2;
-        oz = 2;
+        t = 0;
+        night = false;
+
+        geode = []; // 2 values X, Y
+        entity = []; // 3 Values ID, X, Y
 
         function innit() {
             canvas = document.getElementById("Window");
@@ -62,9 +66,7 @@
             document.addEventListener("keyup", keyUp);
             document.addEventListener("click", click);
 
-            // array for tile gen
-
-            map = new map_Gen(8, 100, 0, MapX, MapZ);
+            map = new map_Gen(2, 50, 25, MapX, MapZ);
 
             setInterval(main, 20);
             setInterval(draw, 20);
@@ -72,24 +74,73 @@
 
         function main() {
             clear();
-            map_Render((MapX+ox), (MapZ+oz), (ox-mx), (oz-mz), 10, 10)
 
-            document.getElementById("output").innerHTML = String(map);
+            document.getElementById("output").innerHTML = String(mx+","+mz);
 
-            if (vx != 0 && (mx+vx > oz-1 && mx+vx <  MapX+ox-1)) {
-                mx += vx;
+            if (night == true) {
+                t -= 2;
+            } else {
+                t += 2;
             }
-            if (vz != 0 && (mz+vz > oz-1 && mz+vz < MapZ+oz-1)) {
-                mz += vz;
+
+            if (t == 1200) {
+                night = true;
+            } else if (t == 0) {
+                night = false
+            }
+            
+            if (game_state == 0) {
+                map_Render(0, (MapX), (MapZ), mx, mz, 3, 3);
+            }
+
+            mx = range((mx+vx), 0, MapX);
+            mz = range((mz+vz), 0, MapZ);
+        }
+
+        function range(c_val, min_val, max_val) {
+            if (c_val < min_val) {
+                return min_val;
+            } else if (c_val > max_val) {
+                return max_val;
+            } else {
+                return c_val;
             }
         }
 
-        function map_Render(maxX, maxZ, cx, cz, size_x, size_z) {
+        // function geode_handler() {
+        //     if (geode.length() < 5) {
+        //         t_x = Math.random*;
+        //         t_z = Math.random*;
+        //     }
+        // }
+
+        function entity_Gen() {
+
+        }
+
+        function entity_Render() {
+
+        }
+
+        function map_Render(biome, maxX, maxZ, cx, cz, size_x, size_z) {
             temp_x = 0;
             temp_z = 0;
             for (x = cx; x < maxX; x++) {
                 for (z = cz; z < maxZ; z++) {
-                    color = "hsl(210, 100%, "+map[x][z]+"%)";
+                    // color = "hsl(210, 100%, "+map[x][z]+"%)";
+                    if (biome == 0) {
+                        temp_val = map[x][z]-t/100;
+                        color = "hsl(122, 54%, "+temp_val+"%)";
+                    }
+                    if (biome == 1) {
+                        if (map[x][z] >= 10) {
+                            temp_val = range(map[x][z], 10, 20)
+                            color = "hsl(100, 93%, "+temp_val+"%)";
+                        } else {
+                            temp_val = range(map[x][z], 21, 36)
+                            color = "hsl(221, 55%, "+temp_val+"%)";
+                        }
+                    }
                     // if (map[temp_x][temp_z] < 5) {
                         
                     // }
@@ -107,7 +158,7 @@
             // Initializer
             for (x = 0; x < MaxX; x++) {
                 for (z = 0; z < MaxZ; z++) {
-                    temp_gen.push(10);
+                    temp_gen.push(MinV);
                 }
                 gen.push(temp_gen);
                 temp_gen = [];
@@ -127,28 +178,28 @@
                         diff = gradient;
                     }
                     
-                    if (gen[x][z]+diff < 100 && gen[x][z]+diff > 0) {
+                    if (gen[x][z]+diff < MaxV && gen[x][z]+diff > MinV) {
                         gen[x][z] += diff;
                     }
 
                     for (t = 0; t < 4; t ++) {
                         if (x-1 > 0 && x+1 < MaxX) {
-                            if (t == 0 && gen[x-1][z]+diff < 100 && gen[x-1][z]+diff > 0) {
+                            if (t == 0 && gen[x-1][z]+diff < MaxV && gen[x-1][z]+diff > MinV) {
                                 gen[x-1][z] = Math.round((gen[x][z]+gen[x-1][z])/2);
                                 gen[x-1][z] +=diff;
                             }
-                            if (t == 1 && gen[x+1][z]+diff < 100 && gen[x+1][z]+diff > 0) {
+                            if (t == 1 && gen[x+1][z]+diff < MaxV && gen[x+1][z]+diff > MinV) {
                                 gen[x+1][z] = Math.round((gen[x][z]+gen[x+1][z])/2);
                                 gen[x+1][z] += diff;
                             }
                         }
 
                         if (z-1 > 0 && z+1  < MaxZ) {
-                            if (t == 2 && gen[x][z-1]+diff < 100 && gen[x][z-1]+diff > 0) {
+                            if (t == 2 && gen[x][z-1]+diff < MaxV && gen[x][z-1]+diff > MinV) {
                                 gen[x][z-1] = Math.round((gen[x][z]+gen[x][z-1])/2);
                                 gen[x][z-1] += diff;
                             }
-                            if (t == 3 && gen[x][z+1]+diff < 100 && gen[x][z+1]+diff > 0) {
+                            if (t == 3 && gen[x][z+1]+diff < MaxV && gen[x][z+1]+diff > MinV) {
                                 gen[x][z+1] = Math.round((gen[x][z]+gen[x][z+1])/2);
                                 gen[x][z+1] += diff;
                             }
@@ -160,8 +211,6 @@
         }
 
         function keyDown() {
-            // document.getElementById("output").innerHTML = event.keyCode;
-
             var keyCode = event.keyCode;
 
             if (keyCode == 87) {
@@ -179,8 +228,6 @@
         }
 
         function keyUp() {
-            // document.getElementById("output").innerHTML = "Key Up";
-
             var keyCode = event.keyCode;
 
             if (keyCode == 87) {
