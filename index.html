@@ -13,14 +13,18 @@
         canvas {
             width: 100%;
             height: auto;
-            border: 1px black solid;
             overflow-y: hidden;
             overflow-x: hidden;
+            border: 1px black solid;
+        }
+        main {
+            padding: 20px;
+            border: 1px black solid;
         }
         section {
             width: auto;
             height: auto;
-            border: 1px black solid;
+            border: 1px black dashed;
             text-indent: 20px;
             padding: 10px;
             margin: 10px;
@@ -44,11 +48,11 @@
     </header>
     <main>
         <canvas onmousemove="getMousePos(event)" id="Window">This element is unsupported.</canvas>
+        <section>
+            <b id="name"></b>
+            <span id="output"></span>
+        </section>
     </main>
-    <section>
-        <b id="name"></b>
-        <span id="output"></span>
-    </section>
     <footer>
         <span>Are you having trouble with this game? I have made a quick peice of information to assit you on your digging. <a target="_blank" href="html/help.html">Click here.</a></span>
     </footer>
@@ -58,7 +62,7 @@
         game_state = 0;
 
         MapX = 100;
-        MapY = 100;
+        MapY = 50;
         size_X = 3;
         size_Y = 3;
 
@@ -81,7 +85,7 @@
 
             canvas.addEventListener("keydown", keyDown);
             canvas.addEventListener("keyup", keyUp);
-            // canvas.addEventListener("keypress", keyPress);
+            canvas.addEventListener("keypress", keyPress);
             canvas.addEventListener("click", Click);
 
             map = new map_Gen(2, 50, 25, MapX, MapY);
@@ -93,6 +97,8 @@
 
         function main() {
             clear();
+
+            document.getElementById("output").innerHTML = String(dig_attempt);
 
             if (night == true) {
                 t -= 2;
@@ -108,7 +114,6 @@
             
             if (game_state == 0) {
                 map_Render(0, (MapX), (MapY), 0, 0, size_X, size_Y, scan);
-                draw(2, false, "", 50, 50, 100, 100);
             }
         }
 
@@ -242,7 +247,7 @@
         }
 
         function Click() {
-            temp_pos = [mouse_X/3, mouse_Y/3];
+            temp_pos = [Math.round(mouse_x/size_X), Math.round(mouse_y/size_Y)];
             dig_attempt.push(temp_pos);
         }
 
