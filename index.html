@@ -17,6 +17,15 @@
             overflow-y: hidden;
             overflow-x: hidden;
         }
+        section {
+            width: auto;
+            height: auto;
+            border: 1px black solid;
+            text-indent: 20px;
+            padding: 10px;
+            margin: 10px;
+            margin-top: 0px;
+        }
         header {
             text-align: center;
 
@@ -34,9 +43,12 @@
         <span>Archeology-base memory game.</span>
     </header>
     <main>
-        <span id="output">Output:</span>
         <canvas id="Window">This element is unsupported.</canvas>
     </main>
+    <section>
+        <b id="name"></b>
+        <span id="output"></span>
+    </section>
     <footer>
         <span>Are you having trouble with this game? I have made a quick peice of information to assit you on your digging. <a target="_blank" href="html/help.html">Click here.</a></span>
     </footer>
@@ -44,16 +56,18 @@
 
     <script>
         game_state = 0;
-        mx = 0;
-        mz = 0;
-        vx = 0;
-        vz = 0;
 
         MapX = 100;
         MapZ = 100;
 
+        mouse_x = 0;
+        mouse_y = 0;
+
         t = 0;
         night = false;
+
+        scan = false;
+        c = 1;
 
         geode = []; // 2 values X, Y
         entity = []; // 3 Values ID, X, Y
@@ -62,11 +76,12 @@
             canvas = document.getElementById("Window");
             ctx = canvas.getContext("2d");
 
-            document.addEventListener("keydown", keyDown);
-            document.addEventListener("keyup", keyUp);
-            document.addEventListener("click", click);
+            canvas.addEventListener("keydown", keyDown);
+            canvas.addEventListener("keyup", keyUp);
+            // canvas.addEventListener("keypress", keyPress);
 
             map = new map_Gen(2, 50, 25, MapX, MapZ);
+            geode_Gen();
 
             setInterval(main, 20);
             setInterval(draw, 20);
@@ -75,7 +90,7 @@
         function main() {
             clear();
 
-            document.getElementById("output").innerHTML = String(mx+","+mz);
+            document.getElementById("output").innerHTML = String(mouse_x+" "+mouse_y)
 
             if (night == true) {
                 t -= 2;
@@ -90,11 +105,18 @@
             }
             
             if (game_state == 0) {
-                map_Render(0, (MapX), (MapZ), mx, mz, 3, 3);
+                map_Render(0, (MapX), (MapZ), 0, 0, 3, 3, scan);
+                draw(2, false, "", 50, 50, 100, 100);
             }
+        }
 
-            mx = range((mx+vx), 0, MapX);
-            mz = range((mz+vz), 0, MapZ);
+        function geode_Gen() {
+            if (geode.length < c) {
+                for (i = geode.length; i < c; i ++) {
+                    temp_pos = [Math.round(range(Math.random()*MapX), 0, MapX), Math.round(range(Math.random()*MapZ), 0, MapZ)];
+                    geode.push(temp_pos);
+                }
+            }
         }
 
         function range(c_val, min_val, max_val) {
@@ -107,22 +129,7 @@
             }
         }
 
-        // function geode_handler() {
-        //     if (geode.length() < 5) {
-        //         t_x = Math.random*;
-        //         t_z = Math.random*;
-        //     }
-        // }
-
-        function entity_Gen() {
-
-        }
-
-        function entity_Render() {
-
-        }
-
-        function map_Render(biome, maxX, maxZ, cx, cz, size_x, size_z) {
+        function map_Render(biome, maxX, maxZ, cx, cz, size_x, size_z, scan) {
             temp_x = 0;
             temp_z = 0;
             for (x = cx; x < maxX; x++) {
@@ -141,6 +148,7 @@
                             color = "hsl(221, 55%, "+temp_val+"%)";
                         }
                     }
+
                     // if (map[temp_x][temp_z] < 5) {
                         
                     // }
@@ -213,39 +221,17 @@
         function keyDown() {
             var keyCode = event.keyCode;
 
-            if (keyCode == 87) {
-                vz = 1;
-            }
-            if (keyCode == 65) {
-                vx = -1;
-            }
-            if (keyCode == 68) {
-                vx = 1;
-            }
-            if (keyCode == 83) {
-                vz = -1;
+            if (keyCode == 32) {
+                scan = true;
             }
         }
 
         function keyUp() {
             var keyCode = event.keyCode;
 
-            if (keyCode == 87) {
-                vz = 0;
+            if (keyCode == 32) {
+                scan = false;
             }
-            if (keyCode == 65) {
-                vx = 0;
-            }
-            if (keyCode == 68) {
-                vx = 0;
-            }
-            if (keyCode == 83) {
-                vz = 0;
-            }
-        }
-
-        function click() {
-            document.getElementById("output").innerHTML = "Mouse Click";
         }
 
         function draw(type, fill, color, x, y, size_x, size_y) {
@@ -254,6 +240,10 @@
             if (type == 1 && fill == false) {
                 ctx.rect(x, y, size_x, size_y);
             }
+            if (type == 2 && fill == false) {
+                ctx.arc(x, y, size_x+size_y/2, Math.pi, Math.pi, false);
+            }
+
             if (color != "") {
                 if (type == 1 && fill == true) {
                     ctx.fillStyle = color;
