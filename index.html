@@ -43,7 +43,7 @@
         <span>Archeology-base memory game.</span>
     </header>
     <main>
-        <canvas id="Window">This element is unsupported.</canvas>
+        <canvas onmousemove="getMousePos(event)" id="Window">This element is unsupported.</canvas>
     </main>
     <section>
         <b id="name"></b>
@@ -58,7 +58,9 @@
         game_state = 0;
 
         MapX = 100;
-        MapZ = 100;
+        MapY = 100;
+        size_X = 3;
+        size_Y = 3;
 
         mouse_x = 0;
         mouse_y = 0;
@@ -71,6 +73,7 @@
 
         geode = []; // 2 values X, Y
         entity = []; // 3 Values ID, X, Y
+        dig_attempt = []; // previous dig locations
 
         function innit() {
             canvas = document.getElementById("Window");
@@ -79,8 +82,9 @@
             canvas.addEventListener("keydown", keyDown);
             canvas.addEventListener("keyup", keyUp);
             // canvas.addEventListener("keypress", keyPress);
+            canvas.addEventListener("click", Click);
 
-            map = new map_Gen(2, 50, 25, MapX, MapZ);
+            map = new map_Gen(2, 50, 25, MapX, MapY);
             geode_Gen();
 
             setInterval(main, 20);
@@ -89,8 +93,6 @@
 
         function main() {
             clear();
-
-            document.getElementById("output").innerHTML = String(mouse_x+" "+mouse_y)
 
             if (night == true) {
                 t -= 2;
@@ -105,7 +107,7 @@
             }
             
             if (game_state == 0) {
-                map_Render(0, (MapX), (MapZ), 0, 0, 3, 3, scan);
+                map_Render(0, (MapX), (MapY), 0, 0, size_X, size_Y, scan);
                 draw(2, false, "", 50, 50, 100, 100);
             }
         }
@@ -113,7 +115,7 @@
         function geode_Gen() {
             if (geode.length < c) {
                 for (i = geode.length; i < c; i ++) {
-                    temp_pos = [Math.round(range(Math.random()*MapX), 0, MapX), Math.round(range(Math.random()*MapZ), 0, MapZ)];
+                    temp_pos = [Math.round(range(Math.random()*MapX), 0, MapX), Math.round(range(Math.random()*MapY), 0, MapY)];
                     geode.push(temp_pos);
                 }
             }
@@ -129,22 +131,22 @@
             }
         }
 
-        function map_Render(biome, maxX, maxZ, cx, cz, size_x, size_z, scan) {
+        function map_Render(biome, maxX, maxY, cx, cz, size_x, size_z, scan) {
             temp_x = 0;
             temp_z = 0;
             for (x = cx; x < maxX; x++) {
-                for (z = cz; z < maxZ; z++) {
-                    // color = "hsl(210, 100%, "+map[x][z]+"%)";
+                for (y = cz; y < maxY; y++) {
+                    // color = "hsl(210, 100%, "+map[x][y]+"%)";
                     if (biome == 0) {
-                        temp_val = map[x][z]-t/100;
+                        temp_val = map[x][y]-t/100;
                         color = "hsl(122, 54%, "+temp_val+"%)";
                     }
                     if (biome == 1) {
-                        if (map[x][z] >= 10) {
-                            temp_val = range(map[x][z], 10, 20)
+                        if (map[x][y] >= 10) {
+                            temp_val = range(map[x][y], 10, 20)
                             color = "hsl(100, 93%, "+temp_val+"%)";
                         } else {
-                            temp_val = range(map[x][z], 21, 36)
+                            temp_val = range(map[x][y], 21, 36)
                             color = "hsl(221, 55%, "+temp_val+"%)";
                         }
                     }
@@ -152,20 +154,20 @@
                     // if (map[temp_x][temp_z] < 5) {
                         
                     // }
-                    draw(1, true, color, x*size_x, z*size_z, size_x, size_z);
+                    draw(1, true, color, x*size_x, y*size_z, size_x, size_z);
                     temp_z += 1
                 }
                 temp_x += 1
             }
         }
 
-        function map_Gen(gradient, MaxV, MinV, MaxX, MaxZ) {
+        function map_Gen(gradient, MaxV, MinV, MaxX, MaxY) {
             var gen = [];
             var temp_gen = [];
 
             // Initializer
             for (x = 0; x < MaxX; x++) {
-                for (z = 0; z < MaxZ; z++) {
+                for (y = 0; y < MaxY; y++) {
                     temp_gen.push(MinV);
                 }
                 gen.push(temp_gen);
@@ -173,7 +175,7 @@
             }
 
             for (x = 0; x < MaxX; x++) {
-                for (z = 0; z < MaxZ; z++) {
+                for (y = 0; y < MaxY; y++) {
                     r = Math.random()*4;
                     diff = 0;
                     if (Math.round(r) == 0) {
@@ -186,30 +188,30 @@
                         diff = gradient;
                     }
                     
-                    if (gen[x][z]+diff < MaxV && gen[x][z]+diff > MinV) {
-                        gen[x][z] += diff;
+                    if (gen[x][y]+diff < MaxV && gen[x][y]+diff > MinV) {
+                        gen[x][y] += diff;
                     }
 
                     for (t = 0; t < 4; t ++) {
                         if (x-1 > 0 && x+1 < MaxX) {
-                            if (t == 0 && gen[x-1][z]+diff < MaxV && gen[x-1][z]+diff > MinV) {
-                                gen[x-1][z] = Math.round((gen[x][z]+gen[x-1][z])/2);
-                                gen[x-1][z] +=diff;
+                            if (t == 0 && gen[x-1][y]+diff < MaxV && gen[x-1][y]+diff > MinV) {
+                                gen[x-1][y] = Math.round((gen[x][y]+gen[x-1][y])/2);
+                                gen[x-1][y] +=diff;
                             }
-                            if (t == 1 && gen[x+1][z]+diff < MaxV && gen[x+1][z]+diff > MinV) {
-                                gen[x+1][z] = Math.round((gen[x][z]+gen[x+1][z])/2);
-                                gen[x+1][z] += diff;
+                            if (t == 1 && gen[x+1][y]+diff < MaxV && gen[x+1][y]+diff > MinV) {
+                                gen[x+1][y] = Math.round((gen[x][y]+gen[x+1][y])/2);
+                                gen[x+1][y] += diff;
                             }
                         }
 
-                        if (z-1 > 0 && z+1  < MaxZ) {
-                            if (t == 2 && gen[x][z-1]+diff < MaxV && gen[x][z-1]+diff > MinV) {
-                                gen[x][z-1] = Math.round((gen[x][z]+gen[x][z-1])/2);
-                                gen[x][z-1] += diff;
+                        if (y-1 > 0 && y+1  < MaxY) {
+                            if (t == 2 && gen[x][y-1]+diff < MaxV && gen[x][y-1]+diff > MinV) {
+                                gen[x][y-1] = Math.round((gen[x][y]+gen[x][y-1])/2);
+                                gen[x][y-1] += diff;
                             }
-                            if (t == 3 && gen[x][z+1]+diff < MaxV && gen[x][z+1]+diff > MinV) {
-                                gen[x][z+1] = Math.round((gen[x][z]+gen[x][z+1])/2);
-                                gen[x][z+1] += diff;
+                            if (t == 3 && gen[x][y+1]+diff < MaxV && gen[x][y+1]+diff > MinV) {
+                                gen[x][y+1] = Math.round((gen[x][y]+gen[x][y+1])/2);
+                                gen[x][y+1] += diff;
                             }
                         }
                     }
@@ -218,7 +220,20 @@
             return gen;
         }
 
+        function getMousePos(e) {
+            mouse_x = e.clientX;
+            mouse_y = e.clientY;
+        }
+
         function keyDown() {
+            var keyCode = event.keyCode;
+        }
+
+        function keyUp() {
+            var keyCode = event.keyCode;
+        }
+
+        function keyPress() {
             var keyCode = event.keyCode;
 
             if (keyCode == 32) {
@@ -226,12 +241,9 @@
             }
         }
 
-        function keyUp() {
-            var keyCode = event.keyCode;
-
-            if (keyCode == 32) {
-                scan = false;
-            }
+        function Click() {
+            temp_pos = [mouse_X/3, mouse_Y/3];
+            dig_attempt.push(temp_pos);
         }
 
         function draw(type, fill, color, x, y, size_x, size_y) {
