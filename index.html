@@ -74,19 +74,18 @@
 
         scan = false;
         c = 1;
+        active = 0;
 
         geode = []; // 2 values X, Y
         entity = []; // 3 Values ID, X, Y
         dig_attempt = []; // previous dig locations
 
-        function innit(e) {
+        function innit() {
             canvas = document.getElementById("Window");
             ctx = canvas.getContext("2d");
 
-            canvas.addEventListener("keydown", keyDown);
-            canvas.addEventListener("keyup", keyUp);
-            canvas.addEventListener("keypress", keyPress);
-            canvas.addEventListener("click", Click);
+            document.addEventListener("keydown", keyDown);
+            document.addEventListener("click", Click);
 
             map = new map_Gen(2, 50, 25, MapX, MapY);
             geode_Gen();
@@ -98,7 +97,9 @@
         function main() {
             clear();
 
-            document.getElementById("output").innerHTML = String(mouse_x+" "+mouse_y)
+            if (active > 0) {
+                active --;
+            }
 
             if (night == true) {
                 t -= 2;
@@ -147,23 +148,11 @@
                         temp_val = map[x][y]-t/100;
                         color = "hsl(122, 54%, "+temp_val+"%)";
                     }
-                    if (biome == 1) {
-                        if (map[x][y] >= 10) {
-                            temp_val = range(map[x][y], 10, 20)
-                            color = "hsl(100, 93%, "+temp_val+"%)";
-                        } else {
-                            temp_val = range(map[x][y], 21, 36)
-                            color = "hsl(221, 55%, "+temp_val+"%)";
-                        }
-                    }
 
-                    // if (map[temp_x][temp_z] < 5) {
-                        
-                    // }
                     draw(1, true, color, x*size_x, y*size_z, size_x, size_z);
-                    temp_z += 1
+                    temp_z += 1;
                 }
-                temp_x += 1
+                temp_x += 1;
             }
         }
 
@@ -228,18 +217,14 @@
 
         function keyDown() {
             var keyCode = event.keyCode;
-        }
 
-        function keyUp() {
-            var keyCode = event.keyCode;
+            document.getElementById("output").innerHTML = "KeyDown";
         }
 
         function keyPress() {
             var keyCode = event.keyCode;
 
-            if (keyCode == 32) {
-                scan = true;
-            }
+            document.getElementById("output").innerHTML = "KeyPress";
         }
 
         function getMousePos(e, canvas) {
@@ -252,17 +237,10 @@
         }
 
         function Click() {
-            temp_pos = [mouse_x-30, mouse_y-120];
+            temp_pos = [mouse_x, mouse_y];
             dig_attempt.push(temp_pos);
-            for (x = 0; x < geode.length/2; x++) {
-                for (y = 0; y < geode.length/2+1; y++) {
-                    if (temp_pos[0] > geode[x]-size_X/2 && temp_pos[0] < geode[x]-size_X/2) {
-                        if (temp_pos[1] > geode[y]-size_Y/2 && temp_pos[1] < geode[y]-size_Y/2) {
-                            document.getElementById("output").innerHTML = "True";
-                        }
-                    }
-                }
-            }
+
+            document.getElementById("output").innerHTML = "Click";
         }
 
         function draw(type, fill, color, x, y, size_x, size_y) {
