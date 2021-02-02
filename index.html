@@ -47,7 +47,7 @@
         <span>Archeology-base memory game.</span>
     </header>
     <main>
-        <canvas onmousemove="getMousePos(event)" id="Window">This element is unsupported.</canvas>
+        <canvas onmousemove="getMousePos(event, canvas)" id="Window">This element is unsupported.</canvas>
         <section>
             <b id="name"></b>
             <span id="output"></span>
@@ -79,7 +79,7 @@
         entity = []; // 3 Values ID, X, Y
         dig_attempt = []; // previous dig locations
 
-        function innit() {
+        function innit(e) {
             canvas = document.getElementById("Window");
             ctx = canvas.getContext("2d");
 
@@ -98,7 +98,7 @@
         function main() {
             clear();
 
-            document.getElementById("output").innerHTML = String(dig_attempt);
+            document.getElementById("output").innerHTML = String(mouse_x+" "+mouse_y)
 
             if (night == true) {
                 t -= 2;
@@ -114,13 +114,14 @@
             
             if (game_state == 0) {
                 map_Render(0, (MapX), (MapY), 0, 0, size_X, size_Y, scan);
+                geode_Gen();
             }
         }
 
         function geode_Gen() {
             if (geode.length < c) {
                 for (i = geode.length; i < c; i ++) {
-                    temp_pos = [Math.round(range(Math.random()*MapX), 0, MapX), Math.round(range(Math.random()*MapY), 0, MapY)];
+                    temp_pos = [Math.round(range(Math.random()*MapX), 0, 1000), Math.round(range(Math.random()*1000), 120, 1000)];
                     geode.push(temp_pos);
                 }
             }
@@ -225,11 +226,6 @@
             return gen;
         }
 
-        function getMousePos(e) {
-            mouse_x = e.clientX;
-            mouse_y = e.clientY;
-        }
-
         function keyDown() {
             var keyCode = event.keyCode;
         }
@@ -246,9 +242,27 @@
             }
         }
 
+        function getMousePos(e, canvas) {
+            var rect = canvas.getBoundingClientRect();
+            scaleX = canvas.width / rect.width;
+            scaleY = canvas.height / rect.height;
+
+            mouse_x = Math.round(range((e.clientX - rect.left) * scaleX, 0, rect.width));
+            mouse_y = Math.round(range((e.clientY - rect.top) * scaleY, 0, rect.height));
+        }
+
         function Click() {
-            temp_pos = [Math.round(mouse_x/size_X), Math.round(mouse_y/size_Y)];
+            temp_pos = [mouse_x-30, mouse_y-120];
             dig_attempt.push(temp_pos);
+            for (x = 0; x < geode.length/2; x++) {
+                for (y = 0; y < geode.length/2+1; y++) {
+                    if (temp_pos[0] > geode[x]-size_X/2 && temp_pos[0] < geode[x]-size_X/2) {
+                        if (temp_pos[1] > geode[y]-size_Y/2 && temp_pos[1] < geode[y]-size_Y/2) {
+                            document.getElementById("output").innerHTML = "True";
+                        }
+                    }
+                }
+            }
         }
 
         function draw(type, fill, color, x, y, size_x, size_y) {
