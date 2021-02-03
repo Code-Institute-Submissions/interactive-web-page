@@ -73,10 +73,10 @@
         night = false;
 
         scan = false;
-        c = 1;
+        c = 11;
         active = 0;
 
-        geode = []; // 2 values X, Y
+        geode = [];
         entity = []; // 3 Values ID, X, Y
         dig_attempt = []; // previous dig locations
 
@@ -88,7 +88,6 @@
             document.addEventListener("click", Click);
 
             map = new map_Gen(2, 50, 25, MapX, MapY);
-            geode_Gen();
 
             setInterval(main, 20);
             setInterval(draw, 20);
@@ -97,8 +96,12 @@
         function main() {
             clear();
 
+            document.getElementById("output").innerHTML = String(geode+" || "+geode.length+" || "+scan+" || "+mouse_x+" "+mouse_y);
+
             if (active > 0) {
                 active --;
+            } else if (active == 0) {
+                scan = false;
             }
 
             if (night == true) {
@@ -122,8 +125,9 @@
         function geode_Gen() {
             if (geode.length < c) {
                 for (i = geode.length; i < c; i ++) {
-                    temp_pos = [Math.round(range(Math.random()*MapX), 0, 1000), Math.round(range(Math.random()*1000), 120, 1000)];
-                    geode.push(temp_pos);
+                    temp_pos = [Math.floor(range(Math.random()*zone[0], size_X, size_X*4, zone[0]-size_X*2)), Math.floor(range(Math.random()*zone[1], size_Y, size_Y*4, zone[1]-size_Y*2))];
+                    geode[geode.length] = parseInt(temp_pos[0]);
+                    geode[geode.length] = parseInt(temp_pos[1]);
                 }
             }
         }
@@ -138,14 +142,26 @@
             }
         }
 
-        function map_Render(biome, maxX, maxY, cx, cz, size_x, size_z, scan) {
+        function map_Render(biome, maxX, maxY, cx, cz, size_x, size_z, s) {
             temp_x = 0;
             temp_z = 0;
             for (x = cx; x < maxX; x++) {
                 for (y = cz; y < maxY; y++) {
                     // color = "hsl(210, 100%, "+map[x][y]+"%)";
-                    if (biome == 0) {
+
+                    if (s == true) {
+                        for (i = 0; i < geode.length/2; i++) {
+                            if (x == Math.round(geode[i*2]/size_X) && y == Math.round(geode[i*2+1]/size_Y)) {
+                                temp_val = 100;
+                            } else {
+                                temp_val = map[x][y]+10-t/100;
+                            }
+                        }
+                    } else {
                         temp_val = map[x][y]-t/100;
+                    }
+
+                    if (biome == 0) {
                         color = "hsl(122, 54%, "+temp_val+"%)";
                     }
 
@@ -218,29 +234,34 @@
         function keyDown() {
             var keyCode = event.keyCode;
 
-            document.getElementById("output").innerHTML = "KeyDown";
+            if (keyCode == 32) {
+                active = 100;
+                scan = true;
+            }
         }
 
         function keyPress() {
             var keyCode = event.keyCode;
-
-            document.getElementById("output").innerHTML = "KeyPress";
         }
 
         function getMousePos(e, canvas) {
             var rect = canvas.getBoundingClientRect();
+
             scaleX = canvas.width / rect.width;
             scaleY = canvas.height / rect.height;
+            zone = [Math.round(rect.width * scaleX), Math.round(rect.height * scaleY)]
 
-            mouse_x = Math.round(range((e.clientX - rect.left) * scaleX, 0, rect.width));
-            mouse_y = Math.round(range((e.clientY - rect.top) * scaleY, 0, rect.height));
+            mouse_x = Math.round(range((e.clientX - rect.left) * scaleX, 0, rect.width * scaleX));
+            mouse_y = Math.round(range((e.clientY - rect.top) * scaleY, 0, rect.height * scaleY));
         }
 
         function Click() {
             temp_pos = [mouse_x, mouse_y];
             dig_attempt.push(temp_pos);
 
-            document.getElementById("output").innerHTML = "Click";
+            for (i = 0; i < geode.length; i++) {
+
+            }
         }
 
         function draw(type, fill, color, x, y, size_x, size_y) {
@@ -248,9 +269,6 @@
 
             if (type == 1 && fill == false) {
                 ctx.rect(x, y, size_x, size_y);
-            }
-            if (type == 2 && fill == false) {
-                ctx.arc(x, y, size_x+size_y/2, Math.pi, Math.pi, false);
             }
 
             if (color != "") {
