@@ -6,7 +6,6 @@
 
     <style>
         body {
-            overflow-y: hidden;
             overflow-x: hidden;
             font-family: "Courier new", "Cambria";
         }
@@ -59,22 +58,27 @@
 
 
     <script>
-        game_state = 0;
+        game_state = 1;
 
-        MapX = 100;
-        MapY = 50;
-        size_X = 3;
-        size_Y = 3;
+        MapX = 15;
+        MapY = 8;
+        size_X = 20;
+        size_Y = 20;
+        origin = 5;
 
         mouse_x = 0;
         mouse_y = 0;
 
         t = 0;
         night = false;
+        scanned = false;
 
-        scan = false;
-        c = 11;
+        c = 1;
         active = 0;
+
+        inventory = [];
+
+        biome = 0;
 
         geode = [];
         entity = []; // 3 Values ID, X, Y
@@ -94,20 +98,16 @@
         }
 
         function main() {
-            clear();
-
-            document.getElementById("output").innerHTML = String(geode+" || "+geode.length+" || "+scan+" || "+mouse_x+" "+mouse_y);
+            document.getElementById("output").innerHTML = String(inventory);
 
             if (active > 0) {
                 active --;
-            } else if (active == 0) {
-                scan = false;
             }
 
             if (night == true) {
-                t -= 2;
+                t -= 1;
             } else {
-                t += 2;
+                t += 1;
             }
 
             if (t == 1200) {
@@ -115,17 +115,49 @@
             } else if (t == 0) {
                 night = false
             }
-            
-            if (game_state == 0) {
-                map_Render(0, (MapX), (MapY), 0, 0, size_X, size_Y, scan);
+
+            if (game_state == 3) {
+                clear();
+                map_Render(biome, (MapX), (MapY), origin, origin, size_X, size_Y);
+                entity_Render();
                 geode_Gen();
+                game_state = 4;
+            }
+
+            if (geode.length != 0) {
+                if (t % 100 == 0) {
+                    clear();
+                    map_Render(biome, (MapX), (MapY), origin, origin, size_X, size_Y);
+                    entity_Render();
+                }
+            }
+        }
+
+        function entity_Render() {
+            temp_val = 30-t/100;
+
+            color = "hsl(19, 29%,"+temp_val+"%)";
+            s_color = "hsl(144, 47%,"+temp_val+"%)";
+
+            draw(12, true, color, s_color, 100, 100, size_X, size_Y);
+        }
+
+        function geode_Render() {
+            for (i = 0; i < geode.length/2; i++) {
+                temp_val = 20-t/100;
+
+                if (biome == 0) {
+                    color = "hsl(122, 54%, "+temp_val+"%)";
+                }
+
+                draw(1, true, color, "", geode[i*2]-size_X, geode[i*2+1]-size_Y, size_X*2, size_Y*2);
             }
         }
 
         function geode_Gen() {
             if (geode.length < c) {
                 for (i = geode.length; i < c; i ++) {
-                    temp_pos = [Math.floor(range(Math.random()*zone[0], size_X, size_X*4, zone[0]-size_X*2)), Math.floor(range(Math.random()*zone[1], size_Y, size_Y*4, zone[1]-size_Y*2))];
+                    temp_pos = [Math.floor(range((Math.random()*zone[0]), size_X*2, zone[0]-size_X*2)), Math.floor(range((Math.random()*zone[1]), size_Y*2, zone[1]-size_Y*2))];
                     geode[geode.length] = parseInt(temp_pos[0]);
                     geode[geode.length] = parseInt(temp_pos[1]);
                 }
@@ -142,30 +174,18 @@
             }
         }
 
-        function map_Render(biome, maxX, maxY, cx, cz, size_x, size_z, s) {
+        function map_Render(biome, maxX, maxY, cx, cz, size_x, size_z) {
             temp_x = 0;
             temp_z = 0;
             for (x = cx; x < maxX; x++) {
                 for (y = cz; y < maxY; y++) {
-                    // color = "hsl(210, 100%, "+map[x][y]+"%)";
-
-                    if (s == true) {
-                        for (i = 0; i < geode.length/2; i++) {
-                            if (x == Math.round(geode[i*2]/size_X) && y == Math.round(geode[i*2+1]/size_Y)) {
-                                temp_val = 100;
-                            } else {
-                                temp_val = map[x][y]+10-t/100;
-                            }
-                        }
-                    } else {
-                        temp_val = map[x][y]-t/100;
-                    }
+                    temp_val = map[x][y]-t/100;
 
                     if (biome == 0) {
                         color = "hsl(122, 54%, "+temp_val+"%)";
                     }
 
-                    draw(1, true, color, x*size_x, y*size_z, size_x, size_z);
+                    draw(1, true, color, "", x*size_x, y*size_z, size_x, size_z);
                     temp_z += 1;
                 }
                 temp_x += 1;
@@ -234,9 +254,10 @@
         function keyDown() {
             var keyCode = event.keyCode;
 
-            if (keyCode == 32) {
+            if (keyCode == 32 && scanned == false) {
+                geode_Render();
                 active = 100;
-                scan = true;
+                scanned = true;
             }
         }
 
@@ -255,20 +276,95 @@
             mouse_y = Math.round(range((e.clientY - rect.top) * scaleY, 0, rect.height * scaleY));
         }
 
-        function Click() {
-            temp_pos = [mouse_x, mouse_y];
-            dig_attempt.push(temp_pos);
-
-            for (i = 0; i < geode.length; i++) {
-
+        function addItem(item, quantity) {
+            if (inventory.includes(item)) {
+                for (i = 0; i < inventory.length/2; i++) {
+                    if (inventory[i*2] == item) {
+                        inventory[i*2+1] += 1;
+                    }
+                }
+            } else {
+                inventory.push(item);
+                inventory.push(quantity);
             }
         }
 
-        function draw(type, fill, color, x, y, size_x, size_y) {
+        function randomItem(itemC) {
+            if (itemC == 0) {
+                addItem("Geode", 1);
+            }
+            if (itemC == 1) {
+                r = Math.random()
+                if (r > 0.5) {
+                    addItem("Geode", 1);
+                } else if (r > 0.4) {
+                    addItem("Copper ore", 1);
+                } else if (r > 0.3) {
+                    addItem("Tin", 1);
+                } else if (r > 0.2) {
+                    addItem("Fossil", 1);
+                } else if (r > 0.19) {
+                    addItem("Iron ore", 1);
+                } else if (r > 0.18) {
+                    addItem("Gold ore", 1);
+                } else if (r > 0.16) {
+                    addItem("Diamond", 1);
+                }  else if (r > 0.15) {
+                    addItem("Ruby", 1);
+                }  else if (r > 0) {
+                    addItem("Geode", 1);
+                }
+            }
+        }
+
+        function displayInv() {
+            text = ""
+            for (i = 0; i < inventory.length/2; i ++) {
+                if (inventory[i*2+1] == 1) {
+                    text = String(text+", "+inventory[i*2])
+                } else {
+                    text = String(text+", "+inventory[i*2+1]+" "+inventory[i*2])
+                }
+            }
+        }
+
+        function Click() {
+            if (scanned == true) {
+                dig_attempt[dig_attempt.length] = parseInt(mouse_x);
+                dig_attempt[dig_attempt.length] = parseInt(mouse_y);
+                
+                for (i = 0; i < geode.length/2; i++) {
+                    if (mouse_x >= geode[i*2]-size_X && mouse_x <= geode[i*2]+size_X && mouse_y >= geode[i*2+1]-size_X && mouse_y <= geode[i*2+1]+size_Y) {
+                        delete geode[i*2+1];
+                        delete geode[i*2];
+                        randomItem(1);
+                    }
+                }
+            }
+        }
+
+        function draw(type, fill, color, s_color, x, y, size_x, size_y) {
             ctx.beginPath();
 
             if (type == 1 && fill == false) {
                 ctx.rect(x, y, size_x, size_y);
+            }
+
+            if (type == 11) {
+                ctx.fillStyle = "hsl(0, 0%, 20%)";
+                ctx.fillRect(x, y, size_x, size_y/2);
+                ctx.fillRect(x+size_x, y+size_y/4, size_x/4, size_y/4);
+            }
+            if (type == 12) {
+                ctx.fillStyle = color;
+                ctx.fillRect(x, y, size_x/2, size_y/2);
+                ctx.fillStyle = s_color;
+                ctx.strokeStyle = s_color;
+                ctx.moveTo(x-size_x/2, y);
+                ctx.lineTo(x+size_x/4, y-size_y*2);
+                ctx.lineTo(x+size_x+size_x/32, y);
+                ctx.lineTo(x-size_x/2, y);
+                ctx.fill();
             }
 
             if (color != "") {
