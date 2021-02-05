@@ -15,8 +15,6 @@
             overflow-y: hidden;
             overflow-x: hidden;
             border: 1px black solid;
-            position: absolute;
-            visibility: collapse;
         }
         main {
             padding: 20px;
@@ -59,37 +57,36 @@
 
 
     <script>
-        game_state = 0;
+        let game_state = 0;
 
-        MapX = 50;
-        MapY = 30;
-        size_X = 6;
-        size_Y = 6;
-        origin = 1;
+        const MapX = 50;
+        const MapY = 30;
+        const size_X = 6;
+        const size_Y = 6;
 
-        mouse_x = 0;
-        mouse_y = 0;
+        let mouse_x = 0;
+        let mouse_y = 0;
 
-        t = 0;
-        night = false;
-        scanned = false;
+        let time = 0;
+        let night = false;
+        let scanned = false;
 
-        c = 1;
-        active = 0;
+        let count = 1;
+        let active = 0;
 
-        inventory = [];
+        let inventory = [];
 
-        biome = 0;
+        let biome_v = 0;
 
-        user = false;
-        bool = false;
-        select = 1;
+        let user = false;
+        let bool = false;
+        let select = 1;
 
-        geode = [];
-        entity = []; // 3 Values ID, X, Y
-        dig_attempt = []; // previous dig locations
+        let geode = [];
+        let entity = []; // 3 Values ID, X, Y
+        let dig_attempt = []; // previous dig locations
 
-        response = ["Welcome to DIG UP! This is a game developed by me just to be presented for my course. The game is only going to have some simple little mini-games and will be just a little bit of fun.", "Hello. I am your assistant, just call me Alph. I will tell you about the game and how to play.", "W and S allow for navigation in menu screens and other text related displays.", "Spacebar and Enter will be the confirm button. But whilst in game will allow the user to visually display the locations of items in the ground.", "Q and E will act as a quick time event where the user will be made to respond within a certain amount of time.", "A, S and D will also act as a quick time response event within salvaging and recovering geodes and other items.", "Within this part of the screen this will allow for menu select and from here you can chose to see your inventory, also go and find resources and also salvage or obtained items.","What would you like to do?", "", "", "What biome would you like to explore?", "Now you can use the Spacebar to scan for any irregular parts of terrain.", ""];
+        const response = ["Welcome to DIG UP! This is a game developed by me just to be presented for my course. The game is only going to have some simple little mini-games and will be just a little bit of fun.", "Hello. I am your assistant, just call me Alph. I will tell you about the game and how to play.", "W and S allow for navigation in menu screens and other text related displays.", "Spacebar and Enter will be the confirm button. But whilst in game will allow the user to visually display the locations of items in the ground.", "Q and E will be part of a digging mini-game, once you have placed down all of your dig locations, I will tell you the way on which you must dig the terrain to prevent items from being damaged.", "A, S and D will also act as a quick time response event within salvaging and recovering geodes and other items.", "Within this part of the screen this will allow for menu select and from here you can chose to see your inventory, also go and find resources and also salvage or obtained items.","What would you like to do?", "", "", "What biome would you like to explore?", "Now you can use the Spacebar to scan for any irregular parts of terrain."];
 
         function innit() {
             canvas = document.getElementById("Window");
@@ -104,7 +101,7 @@
         }
 
         function alph() {
-            if (user == true && game_state < 0.7) {
+            if (user && game_state < 0.7) {
                 if (game_state == 0.1) {
                     document.getElementById("name").innerHTML = "Alph:"
                 }
@@ -114,8 +111,7 @@
 
             if (game_state < 0.7) {
                 document.getElementById("output").innerHTML = response[game_state*10]+"<br><br> Press any button to continue.";
-            }
-            if (game_state == 0.7) {
+            } else if (game_state == 0.7) {
                 if (select == 1) {
                     temp = String("</br><b> World Map</b></br>Museum</br> Inventory")
                 } else if (select == 2) {
@@ -123,14 +119,13 @@
                 } else if (select == 3) {
                     temp = String("</br>World Map</br>Museum</br><b>Inventory</b>")
                 }
-                if (user == true) {
+                if (user) {
                     user = false;
                     game_state = select;
                     select = 1;
                 }
                 document.getElementById("output").innerHTML = response[game_state*10]+temp;
-            }
-            if (game_state == 1) {
+            } else if (game_state == 1) {
                 if (select == 0) {
                     game_state == 0.7;
                 }
@@ -141,36 +136,39 @@
                 } else if (select == 3) {
                     temp = String("</br>Resume</br>Plains</br><b>Swamp</b></br>Mountain");
                 } 
-                if (user == true) {
+                if (user) {
                     user = false;
                     game_state = 1.1;
-                    toggle(true);
-                    biome(select);
+                    // toggle(true);
+                    biome_v = select;
+                    biome(biome_v);
                 }
                 document.getElementById("output").innerHTML = response[game_state*10]+temp;
-            }
-            if (game_state == 1.1) {
-                document.getElementById("output").innerHTML = String(map);
+            } else if (game_state == 1.1) {
+                document.getElementById("output").innerHTML = "Loading Terrain...";
             }
         }
         
         function toggle(bool) {
-            if (bool == true) {
-                document.getElementById("Window").style.visibility = "visible";
-                document.getElementById("Window").style.position = "static";
+            if (bool) {
+                document.getElementById("Window").style.display = "inline";
             } else if (bool == false) {
-                document.getElementById("Window").style.visibility = "hidden";
-                document.getElementById("Window").style.position = "absoulte";
+                document.getElementById("Window").style.display = "none";
             }
         }
 
         function biome(value) {
             map = new map_Gen(2, 50, 25, MapX, MapY);
-            map_Render(value, (MapX), (MapY), 0, 0, size_X, size_Y);
             geode_Gen();
+            setInterval(main, 20);
+            setInterval(draw, 20);
         }
 
         function main() {
+            if (time % 100 == 0 || time == 10) {
+                map_Render(biome_v, MapX, MapY, 0, 0, size_X, size_Y);
+            }
+
             if (scanned == true) {
                 active --;
             } else if (active < 200){
@@ -178,28 +176,20 @@
             }
 
             if (night == true) {
-                t -= 1;
+                time -= 1;
             } else {
-                t += 1;
+                time += 1;
             }
 
-            if (t == 1200) {
+            if (time == 1200) {
                 night = true;
-            } else if (t == 0) {
+            } else if (time == 0) {
                 night = false;
-            }
-
-            if (geode.length != 0) {
-                if (t % 100 == 0) {
-                    clear();
-                    map_Render(biome, (MapX), (MapY), 0, origin, size_X, size_Y);
-                    gui_Render();
-                }
             }
         }
 
         function entity_Render() {
-            temp_val = 30-t/100;
+            temp_val = 30-time/100;
 
             color = "hsl(19, 29%,"+temp_val+"%)";
             s_color = "hsl(144, 47%,"+temp_val+"%)";
@@ -209,7 +199,7 @@
 
         function geode_Render() {
             for (i = 0; i < geode.length/2; i++) {
-                temp_val = 20-t/100;
+                temp_val = 20-time/100;
 
                 if (biome == 0) {
                     color = "hsl(122, 54%, "+temp_val+"%)";
@@ -220,8 +210,8 @@
         }
 
         function geode_Gen() {
-            if (geode.length < c) {
-                for (i = geode.length; i < c; i ++) {
+            if (geode.length < count) {
+                for (i = geode.length; i < count; i ++) {
                     temp_pos = [Math.floor(range((Math.random()*zone[0]), size_X*2, zone[0]-size_X*2)), Math.floor(range((Math.random()*zone[1]), size_Y*2, zone[1]-size_Y*2))];
                     geode[geode.length] = parseInt(temp_pos[0]);
                     geode[geode.length] = parseInt(temp_pos[1]);
@@ -244,7 +234,7 @@
             temp_z = 0;
             for (x = cx; x < maxX; x++) {
                 for (y = cz; y < maxY; y++) {
-                    temp_val = map[x][y]-t/100;
+                    temp_val = map[x][y]-time/100;
 
                     if (biome == 1) {
                         color = "hsl(122, 54%, "+temp_val+"%)";
@@ -288,24 +278,24 @@
                         gen[x][y] += diff;
                     }
 
-                    for (t = 0; t < 4; t ++) {
+                    for (time = 0; time < 4; time ++) {
                         if (x-1 > 0 && x+1 < MaxX) {
-                            if (t == 0 && gen[x-1][y]+diff < MaxV && gen[x-1][y]+diff > MinV) {
+                            if (time == 0 && gen[x-1][y]+diff < MaxV && gen[x-1][y]+diff > MinV) {
                                 gen[x-1][y] = Math.round((gen[x][y]+gen[x-1][y])/2);
                                 gen[x-1][y] +=diff;
                             }
-                            if (t == 1 && gen[x+1][y]+diff < MaxV && gen[x+1][y]+diff > MinV) {
+                            if (time == 1 && gen[x+1][y]+diff < MaxV && gen[x+1][y]+diff > MinV) {
                                 gen[x+1][y] = Math.round((gen[x][y]+gen[x+1][y])/2);
                                 gen[x+1][y] += diff;
                             }
                         }
 
                         if (y-1 > 0 && y+1  < MaxY) {
-                            if (t == 2 && gen[x][y-1]+diff < MaxV && gen[x][y-1]+diff > MinV) {
+                            if (time == 2 && gen[x][y-1]+diff < MaxV && gen[x][y-1]+diff > MinV) {
                                 gen[x][y-1] = Math.round((gen[x][y]+gen[x][y-1])/2);
                                 gen[x][y-1] += diff;
                             }
-                            if (t == 3 && gen[x][y+1]+diff < MaxV && gen[x][y+1]+diff > MinV) {
+                            if (time == 3 && gen[x][y+1]+diff < MaxV && gen[x][y+1]+diff > MinV) {
                                 gen[x][y+1] = Math.round((gen[x][y]+gen[x][y+1])/2);
                                 gen[x][y+1] += diff;
                             }
