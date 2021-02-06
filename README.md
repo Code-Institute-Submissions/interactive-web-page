@@ -1,45 +1,21 @@
-<img src="https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png" style="margin: 0;">
+<h2>Interactive Website Development</h2><hr>
+This is the readme.md file for my website that has been created for the interactive website development module. This game that I have created is to try and use my knowledge of JS, CSS and HTML to create a simple but yet effective series of mememory games. My idea was to create a game that contained a way of rewarding the player no matter what, but there reward value would improve depending on how well they complete each of the mini-games.
 
-Welcome USER_NAME,
+<h3>Index</h3><hr>
+This is my index for easy navigation around my readme.md file. This is to help the user be able to find out the information on which they may need.
 
-This is the Code Institute student template for Gitpod. We have preinstalled all of the tools you need to get started. You can safely delete this README.md file, or change it for your own project. Please do read it at least once, though! It contains some important information about Gitpod and the extensions we use.
+<a href="1">Introduction</a></br>
+<a href="1"></a></br>
+<a href="1"></a></br>
+<a href="1"></a></br>
+<a href="1"></a></br>
 
-## Gitpod Reminders
 
-To run a frontend (HTML, CSS, Javascript only) application in Gitpod, in the terminal, type:
+<h3 id="1">Introduction</h3><hr>
+Initially I wanted to create a game on which would present the user with a series of different memory games, I didn't want to create a simple game with one mechanic and only be able to test the player in one way. I also wanted to try and create the game using only JS, CSS and HTML. I wanted to try and keep the website on which holds the game simple and yet effective so that it maybe able to be resized and changed depending on what the user would like to do. The functionality and simplisity of the two webpages make them very versatile.
 
-`python3 -m http.server`
+I wanted to create a game that had the ability to inform the player on how to complete the different mini-games but, I had realised that text when created on a canvas can behave in a series of strange and interesting ways to. I chose to go back to my original idea and use an external text box for the Guide to use to talk to the player.
 
-A blue button should appear to click: *Make Public*,
+Originally I had wanted to make the game, all in one and try and create a series of assets by hand, but I liked the idea of a website that generates and creates the visuals using the canvas.getContect command and the 2D rendering graphics. I also wanted to try and create a series of functions within my game that can be changed massively, which would allow for functions like the world gen, to be able to create a series of worlds depending on the users choice.
 
-Another blue button should appear to click: *Open Browser*.
-
-To run a backend Python file, type `python3 app.py`, if your Python file is named `app.py` of course.
-
-A blue button should appear to click: *Make Public*,
-
-Another blue button should appear to click: *Open Browser*.
-
-In Gitpod you have superuser security privileges by default. Therefore you do not need to use the `sudo` (superuser do) command in the bash terminal in any of the lessons.
-
-## Updates Since The Instructional Video
-
-We continually tweak and adjust this template to help give you the best experience. Here is the version history:
-
-**October 21 2020:** Versions of the HTMLHint, Prettier, Bootstrap4 CDN and Auto Close extensions updated. The Python extension needs to stay the same version for now.
-
-**October 08 2020:** Additional large Gitpod files (`core.mongo*` and `core.python*`) are now hidden in the Explorer, and have been added to the `.gitignore` by default.
-
-**September 22 2020:** Gitpod occasionally creates large `core.Microsoft` files. These are now hidden in the Explorer. A `.gitignore` file has been created to make sure these files will not be committed, along with other common files.
-
-**April 16 2020:** The template now automatically installs MySQL instead of relying on the Gitpod MySQL image. The message about a Python linter not being installed has been dealt with, and the set-up files are now hidden in the Gitpod file explorer.
-
-**April 13 2020:** Added the _Prettier_ code beautifier extension instead of the code formatter built-in to Gitpod.
-
-**February 2020:** The initialisation files now _do not_ auto-delete. They will remain in your project. You can safely ignore them. They just make sure that your workspace is configured correctly each time you open it. It will also prevent the Gitpod configuration popup from appearing.
-
-**December 2019:** Added Eventyret's Bootstrap 4 extension. Type `!bscdn` in a HTML file to add the Bootstrap boilerplate. Check out the <a href="https://github.com/Eventyret/vscode-bcdn" target="_blank">README.md file at the official repo</a> for more options.
-
---------
-
-Happy coding!
+One of the current things I am trying to create and implements is for some visual things to be geneerated on the canvas whilst the player is in the menu screen. Originally I wanted to hide the canvas and display it when the user would like to play a game that required visuals. Due to the issues that where created from hiding the canvas, I choice to leave the canvas always visible and will fill the empty space with some idle imagery.
