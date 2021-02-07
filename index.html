@@ -85,7 +85,7 @@
         let geode = [];
         let entity = []; // 3 Values ID, X, Y
         let dig_attempt = []; // previous dig locations
-        let attempts = 0;
+        let attempts = 3;
 
         let item_select = 0;
 
@@ -151,7 +151,7 @@
                 }
                 document.getElementById("output").innerHTML = OUTPUT[game_state*10]+temp;
             } else if (game_state == DURING_GAME) {
-                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+"</br></br>Attempts:"+attempts;
+                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+"</br></br>Attempts:"+dig_attempt;
             }
         }
 
@@ -166,6 +166,10 @@
             if (time % 100 == 0 || time == 10) {
                 map_Render(biome_v, MapX, MapY, 0, 0, size_X, size_Y);
             }
+
+            // if (dig_attempt.length == (attempts+count)*2) {
+
+            // }
 
             if (scanned == true) {
                 active --;
@@ -184,15 +188,6 @@
             } else if (time == 0) {
                 night = false;
             }
-        }
-
-        function entity_Render() {
-            temp_val = 30-time/100;
-
-            color = "hsl(19, 29%,"+temp_val+"%)";
-            s_color = "hsl(144, 47%,"+temp_val+"%)";
-
-            draw(12, true, color, s_color, 100, 100, size_X, size_Y);
         }
 
         function geode_Render() {
@@ -400,17 +395,17 @@
         }
 
         function Click() {
-            if (scanned == true) {
+            if (scanned == true && dig_attempt.length < attempts*2) {
                 dig_attempt[dig_attempt.length] = parseInt(mouse_x);
                 dig_attempt[dig_attempt.length] = parseInt(mouse_y);
                 
-                for (i = 0; i < geode.length/2; i++) {
-                    if (mouse_x >= geode[i*2]-size_X && mouse_x <= geode[i*2]+size_X && mouse_y >= geode[i*2+1]-size_X && mouse_y <= geode[i*2+1]+size_Y) {
-                        delete geode[i*2+1];
-                        delete geode[i*2];
-                        randomItem(1);
-                    }
-                }
+                // for (i = 0; i < geode.length/2; i++) {
+                //     if (mouse_x >= geode[i*2]-size_X && mouse_x <= geode[i*2]+size_X && mouse_y >= geode[i*2+1]-size_X && mouse_y <= geode[i*2+1]+size_Y) {
+                //         delete geode[i*2+1];
+                //         delete geode[i*2];
+                //         randomItem(1);
+                //     }
+                // }
             }
         }
 
@@ -419,23 +414,6 @@
 
             if (type == 1 && fill == false) {
                 ctx.rect(x, y, size_x, size_y);
-            }
-
-            if (type == 11) {
-                ctx.fillStyle = "hsl(0, 0%, 20%)";
-                ctx.fillRect(x, y, size_x, size_y/2);
-                ctx.fillRect(x+size_x, y+size_y/4, size_x/4, size_y/4);
-            }
-            if (type == 12) {
-                ctx.fillStyle = color;
-                ctx.fillRect(x, y, size_x/2, size_y/2);
-                ctx.fillStyle = s_color;
-                ctx.strokeStyle = s_color;
-                ctx.moveTo(x-size_x/2, y);
-                ctx.lineTo(x+size_x/4, y-size_y*2);
-                ctx.lineTo(x+size_x+size_x/32, y);
-                ctx.lineTo(x-size_x/2, y);
-                ctx.fill();
             }
 
             if (color != "") {
