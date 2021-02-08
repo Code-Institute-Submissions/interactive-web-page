@@ -103,6 +103,7 @@
             ctx = canvas.getContext("2d");
 
             document.addEventListener("keypress", keyPress);
+            document.addEventListener("keydown", keyDown);
             document.addEventListener("click", Click);
 
             document.getElementById("name").innerHTML = "???:"
@@ -336,14 +337,6 @@
 
         function keyDown() {
             var keyCode = event.keyCode;
-        }
-
-        function keyPress() {
-            var keyCode = event.keyCode;
-
-            if (game_state < AFTER_TUTORIAL) {
-                user = true;
-            }
 
             if (game_state == AFTER_TUTORIAL || game_state == START_GAME) {
                 if (keyCode == 87 && select > 1) {
@@ -353,6 +346,14 @@
                 } else if (keyCode == 13 || keyCode == 32) {
                     user = true;
                 }
+            }
+        }
+
+        function keyPress() {
+            var keyCode = event.keyCode;
+
+            if (game_state < AFTER_TUTORIAL) {
+                user = true;
             }
 
             if (keyCode == 32 && game_state >= 1 && game_state < 2) {
