@@ -89,6 +89,9 @@
         let dig_attempt = []; // previous dig locations
         let attempts = 3;
         let sequence = [];
+        let SEQUENCE_COMPLETE = false;
+        let sequence_len = 0;
+        let response_sequence = [];
 
         let item_select = 0;
 
@@ -96,9 +99,10 @@
         const START_GAME = 1;
         const DURING_GAME = 1.1;
         const SECOND_GAME = 1.2;
+        const SEQUENCE_RESPONSE = 1.3;
 
         const OUTPUT_ITEMS = [["World Map", "Museum", "Inventory"],["Plains", "Desert", "Forest", "Swamp", "Mountain", "Taiga", "Jungle", "Red Desert", "Savannah", "Marsh"]]
-        const OUTPUT = ["Welcome to DIG UP! This is a game developed by me just to be presented for my course. The game is only going to have some simple little mini-games and will be just a little bit of fun.", "Hello. I am your assistant, just call me Alph. I will tell you about the game and how to play.", "W and S allow for navigation in menu screens and other text related displays.", "Spacebar and Enter will be the confirm button. But whilst in game will allow the user to visually display the locations of items in the ground.", "Q and E will be part of a digging mini-game, once you have placed down all of your dig locations, I will tell you the way on which you must dig the terrain to prevent items from being damaged.", "A, S and D will also act as a quick time response event within salvaging and recovering geodes and other items.", "Within this part of the screen this will allow for menu select and from here you can chose to see your inventory, also go and find resources and also salvage or obtained items.","What would you like to do?", "", "", "What biome would you like to explore?", "Now you have "+attempts+" attempts to find the items within the terrian, using spacebar you can see the locations of the items." , "Now you will be given a sequence of characters which will have to be repeated back to be able to dig up the locations you have chosen."];
+        const OUTPUT = ["Welcome to DIG UP! This is a game developed by me just to be presented for my course. The game is only going to have some simple little mini-games and will be just a little bit of fun.", "Hello. I am your assistant, just call me Alph. I will tell you about the game and how to play.", "W and S allow for navigation in menu screens and other text related displays.", "Spacebar and Enter will be the confirm button. But whilst in game will allow the user to visually display the locations of items in the ground.", "Q and E will be part of a digging mini-game, once you have placed down all of your dig locations, I will tell you the way on which you must dig the terrain to prevent items from being damaged.", "A, S and D will also act as a quick time response event within salvaging and recovering geodes and other items.", "Within this part of the screen this will allow for menu select and from here you can chose to see your inventory, also go and find resources and also salvage or obtained items.","What would you like to do?", "", "", "What biome would you like to explore?", "Now you will have a series of attempts to find the items within the terrian, using spacebar you can see the locations of the items.", "Now you will be given a sequence of characters which will have to be repeated back to be able to dig up the locations you have chosen.", "Now can you repeat the sequence that was just produced.", ""];
 
         function innit() {
             canvas = document.getElementById("Window");
@@ -111,18 +115,6 @@
             document.getElementById("name").innerHTML = "???:"
             document.getElementById("output").innerHTML = OUTPUT[game_state*10]+"<br><br> Press any button to continue.";
             setInterval(alph, 20);
-        }
-
-        function OUTPUT_PRINTOUT (items, selected) {
-            let temp = "";
-            for (x = 0; x < items.length; x++) {
-                if (selected-1 == x) {
-                    temp = String(temp+"</br><b>"+items[x]+"</b>")
-                } else {
-                    temp = String(temp+"</br>"+items[x])
-                }
-            }
-            return temp;
         }
 
         function alph() {
@@ -156,10 +148,27 @@
                 }
                 document.getElementById("output").innerHTML = OUTPUT[game_state*10]+temp;
             } else if (game_state == DURING_GAME) {
-                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+"</br></br>Attempts: "+(attempts-(Math.floor(dig_attempt.length/2)));
-            } else if (game.state == SECOND_GAME) {
+                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+" "+game_state+"</br></br>Attempts: "+(attempts-(Math.floor(dig_attempt.length/2)));
+                if (dig_attempt.length >= attempts*2) {
+                    game_state = SECOND_GAME;
+                }
+            } else if (game_state == SECOND_GAME) {
                 document.getElementById("output").innerHTML = OUTPUT[game_state*10]+"</br></br>Sequence: "+sequence;
+            } else if (game_state == SEQUENCE_RESPONSE) {
+                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+"</br></br>Sequence: "+response_sequence;
             }
+        }
+
+        function OUTPUT_PRINTOUT (items, selected) {
+            let temp = "";
+            for (x = 0; x < items.length; x++) {
+                if (selected-1 == x) {
+                    temp = String(temp+"</br><b>"+items[x]+"</b>")
+                } else {
+                    temp = String(temp+"</br>"+items[x])
+                }
+            }
+            return temp;
         }
 
         function biome(value) {
@@ -190,13 +199,56 @@
         }
 
         function main() {
-            if ((time % 100 == 0 || time == 10 || scanned == false) && game_state == DURING_GAME) {
+            if ((time % 100 == 0 || time == 10 || scanned == false) &&  game_state == DURING_GAME) {
                 map_Render(biome_v, MapX, MapY, 0, 0, size_X, size_Y);
                 dig_Render();
             }
 
-            if (attempts-(Math.floor(dig_attempt.length/2)) == 0) {
-                game_state = SECOND_GAME;
+            if (game_state == SECOND_GAME || game_state == SEQUENCE_RESPONSE) {
+                clear();
+                let CALC_X = Math.round(dig_attempt[0]/size_X)
+                let CALC_Y = Math.round(dig_attempt[1]/size_Y)
+                map_Render(biome_v, CALC_X+size_X,  CALC_Y+size_Y,  CALC_X-size_X, CALC_Y-size_Y, size_X, size_Y);
+                draw(1, true, "hsl(0, 0%, 0%)", "", dig_attempt[0]-size_X, dig_attempt[1]-size_Y, size_X*2, size_Y*2)
+                if (sequence_len == 0) {
+                    sequence_len = (3+Math.round(Math.random()*5))
+                }
+                if (time % 20 == 0 && sequence.length < sequence_len && SEQUENCE_COMPLETE == false) {
+                    let r = Math.random()
+                    if (r > 0.5) {
+                        sequence.push("Q");
+                    } else {
+                        sequence.push("E");
+                    }
+                    if (sequence.length == sequence_len) {
+                        SEQUENCE_COMPLETE = true;
+                    }
+                } else if (time % 20 == 0 && SEQUENCE_COMPLETE == true) {
+                    game_state = SEQUENCE_RESPONSE;
+                    SEQUENCE_COMPLETE = false;
+                }
+                
+                if (response_sequence.length == sequence.length) {
+                    let item_quality = 100;
+                    for (i = 0; i < sequence.length; i++) {
+                        if (sequence[i] != response_sequence[i]) {
+                            item_quality = Math.round(item_quality-(50/sequence_len));
+                        }
+                        if (i == sequence.length) {
+                            let sequence_check = true;
+                        }
+                    }
+                    if (sequence_check) {
+                        sequence_check = false;
+                        if (checkArray(dig_attempt[0], dig_attempt[1], geode) == true) {
+                            randomItem(biome_v, item_quality);
+                        } else {
+                            randomItem(0, item_quality);
+                        }
+                        dig_attempt.shift();
+                        dig_attempt.shift();
+                    }
+                }
             }
 
             if (scanned == true) {
@@ -228,6 +280,17 @@
                 night = true;
             } else if (time == 0) {
                 night = false;
+            }
+        }
+
+        function checkArray(f_value, s_value, array) {
+            if (f_value != "" && s_value != "") {
+                for (i = 0; i < array.length/2; i++) {
+                    if (array[i*2] == f_value && array[i*2+1] == s_value) {
+                        return true;
+                    }
+                }
+                return false;
             }
         }
 
@@ -349,7 +412,7 @@
         function keyDown() {
             var keyCode = event.keyCode;
 
-            if (game_state == AFTER_TUTORIAL || game_state == START_GAME) {
+            if (game_state >= AFTER_TUTORIAL || game_state < START_GAME) {
                 if (keyCode == 87 && select > 1) {
                     select -= 1
                 } else if (keyCode == 83 && select < OUTPUT_ITEMS[item_select].length) {
@@ -367,13 +430,22 @@
                 user = true;
             }
 
-            if (keyCode == 32 && game_state >= 1 && game_state < 2) {
+            if (keyCode == 32 && game_state >= START_GAME && game_state >= DURING_GAME) {
                 if (scanned == false && active > 0 && cooldown == 0) {
                     cooldown = 50;
                     scanned = true;
                     geode_Render();
                 } else {
                     scanned = false;
+                }
+            }
+
+            if (game_state == SEQUENCE_RESPONSE && sequence.length > response_sequence.length) {
+                if (keyCode == 81) {
+                    response_sequence.push("Q");
+                }
+                if (keyCode == 69) {
+                    response_sequence.push("E");
                 }
             }
         }
@@ -389,43 +461,53 @@
             mouse_y = Math.round(range((e.clientY - rect.top) * scaleY, 0, rect.height * scaleY));
         }
 
-        function addItem(item, quantity) {
+        function addItem(item, quantity, quality) {
             if (inventory.includes(item)) {
                 for (i = 0; i < inventory.length/2; i++) {
-                    if (inventory[i*2] == item) {
+                    if (inventory[i*2] == item+" (Q"+quality+")" && quality != 0) {
+                        inventory[i*2+1] += 1;
+                    } else if (inventory[i*2] == item) {
                         inventory[i*2+1] += 1;
                     }
                 }
             } else {
-                inventory.push(item);
+                inventory.push(item+" (Q"+quality+")");
                 inventory.push(quantity);
             }
         }
 
-        function randomItem(itemC) {
+        function randomItem(itemC, quality) {
+            // 0 - Fall catagory, the bad rewards
             if (itemC == 0) {
-                addItem("Geode", 1);
+                r = Math.random();
+                if (r > 0.5) {
+                    addItem("Dirt", 1, 0);
+                } else if (r > 0.4) {
+                    addItem("Copper ore", 1, 0);
+                } else if (r > 0) {
+                    addItem("Stone", 1, 0);
+                }
             }
             if (itemC == 1) {
                 r = Math.random();
                 if (r > 0.5) {
-                    addItem("Geode", 1);
+                    addItem("Geode", 1, quality);
                 } else if (r > 0.4) {
-                    addItem("Copper ore", 1);
+                    addItem("Copper ore", 1, 0);
                 } else if (r > 0.3) {
-                    addItem("Tin", 1);
+                    addItem("Tin", 1, 0);
                 } else if (r > 0.2) {
-                    addItem("Fossil", 1);
+                    addItem("Fossil", 1, quality);
                 } else if (r > 0.19) {
-                    addItem("Iron ore", 1);
+                    addItem("Iron ore", 1, 0);
                 } else if (r > 0.18) {
-                    addItem("Gold ore", 1);
+                    addItem("Gold ore", 1, 0);
                 } else if (r > 0.16) {
-                    addItem("Diamond", 1);
+                    addItem("Diamond", 1, quality);
                 }  else if (r > 0.15) {
-                    addItem("Ruby", 1);
+                    addItem("Ruby", 1, quality);
                 }  else if (r > 0) {
-                    addItem("Geode", 1);
+                    addItem("Geode", 1, quality);
                 }
             }
         }
