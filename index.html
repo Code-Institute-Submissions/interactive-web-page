@@ -208,33 +208,8 @@
                 dig_Render();
             }
 
-            if (game_state == DURING_GAME) {
-                if (scanned == true) {
-                    geode_Render();
-                }
-
-                if (cooldown > 0) {
-                    cooldown --;
-                }
-
-                if (scanned == true && active > 0) {
-                    active --;
-                } else if (active < 100){
-                    scanned = false;
-                    active++;
-                }
-
-                if (night == true) {
-                    time -= 1;
-                } else {
-                    time += 1;
-                }
-
-                if (time == 1200) {
-                    night = true;
-                } else if (time == 0) {
-                    night = false;
-                }
+            if (scanned == true && game_state == DURING_GAME) {
+                geode_Render();
             }
 
             if (time % 20 == 0 && game_state == DURING_GAME) {
@@ -300,6 +275,29 @@
                     game_state = AFTER_TUTORIAL;
                     clear();
                 }
+            }
+
+            if (cooldown > 0) {
+                cooldown --;
+            }
+
+            if (scanned == true && active > 0) {
+                active --;
+            } else if (active < 100){
+                scanned = false;
+                active++;
+            }
+
+            if (night == true) {
+                time -= 1;
+            } else {
+                time += 1;
+            }
+
+            if (time == 1200) {
+                night = true;
+            } else if (time == 0) {
+                night = false;
             }
         }
 
@@ -532,9 +530,12 @@
             text = "";
             for (i = 0; i < inventory.length/2; i ++) {
                 if (inventory[i*2+1] == 1) {
-                    text = String(text+" "+inventory[i*2]+",");
+                    text = String(text+" "+inventory[i*2]);
                 } else {
-                    text = String(text+" "+inventory[i*2+1]+" "+inventory[i*2]+",")
+                    text = String(text+" "+inventory[i*2+1]+" "+inventory[i*2])
+                }
+                if (inventory.length-1 != i*2+1) {
+                    text = text+","
                 }
             }
             return text;
