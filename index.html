@@ -27,6 +27,7 @@
             text-indent: 20px;
             padding: 10px;
             margin-bottom: 10px;
+            user-select: none;
         }
         header {
             text-align: center;
@@ -71,12 +72,12 @@
         let night = false;
         let scanned = false;
 
-        let count = 5;
+        let count = 0;
         let active = 0;
         let cooldown = 0;
         let diggable = false;
 
-        let inventory = ["Stone", 5]; // Inventory array to hold the items the user obtains from the terrain.
+        let inventory = ["Stone", 5, "Geode (Q75)", 1, "Gold ore", 7, "Iron ore", 9]; // Inventory array to hold the items the user obtains from the terrain.
 
         let biome_v = ""; // String for the biome_value of the terrain.
 
@@ -95,15 +96,21 @@
 
         let item_select = 0;
 
+        let tool_belt = ["Pocket Scanner", 1, "Pickaxe", 1, "Shovel", 1];
+
         const AFTER_TUTORIAL = 0.7;
         const START_GAME = 1;
         const DURING_GAME = 1.1;
         const SECOND_GAME = 1.2;
         const SEQUENCE_RESPONSE = 1.3;
         const ENTER_MUSEUM = 2
+        const ITEM_SELECTED = 2.1;
         const INVENTORY = 3;
+        const UPGRADES = 4;
 
-        const OUTPUT_ITEMS = [["World Map", "Museum", "Inventory"],["Plains", "Desert", "Forest", "Swamp", "Mountain", "Taiga", "Jungle", "Red Desert", "Savannah", "Marsh"], ["Process", "Sell"]]
+
+        const LOW_ITEMS = ["Dirt", "Stone", "Gold ore", "Iron ore", "Copper ore"]
+        const OUTPUT_ITEMS = [["World Map", "Museum", "Inventory", "Upgrade"],["Plains", "Desert", "Forest", "Swamp", "Mountain", "Taiga", "Jungle", "Red Desert", "Savannah", "Marsh"], ["Process"]]
         const OUTPUT = ["Welcome to DIG UP! This is a game developed by me just to be presented for my course. The game is only going to have some simple little mini-games and will be just a little bit of fun.", "Hello. I am your assistant, just call me Alph. I will tell you about the game and how to play.", "W and S allow for navigation in menu screens and other text related displays.", "Spacebar and Enter will be the confirm button. But whilst in game will allow the user to visually display the locations of items in the ground.", "Q and E will be part of a digging mini-game, once you have placed down all of your dig locations, I will tell you the way on which you must dig the terrain to prevent items from being damaged.", "A, S and D will also act as a quick time response event within salvaging and recovering geodes and other items.", "Within this part of the screen this will allow for menu select and from here you can chose to see your inventory, also go and find resources and also salvage or obtained items.","What would you like to do?", "", "", "What biome would you like to explore?", "Now you will have a series of attempts to find the items within the terrian, using spacebar you can see the locations of the items.", "Now you will be given a sequence of characters which will have to be repeated back to be able to dig up the locations you have chosen.", "Now can you repeat the sequence that was just produced.", ""];
 
         function innit() {
@@ -148,6 +155,7 @@
                     user = false;
                     game_state = DURING_GAME;
                     biome_v = OUTPUT_ITEMS[1][select-1];
+                    count = 3+Math.ceil(Math.random()*tool_belt[1]);
                     biome(biome_v);
                 }
                 document.getElementById("output").innerHTML = OUTPUT[game_state*10]+temp;
@@ -162,33 +170,65 @@
                 document.getElementById("output").innerHTML = OUTPUT[game_state*10]+" You have manageed to find "+inventory[inventory.length-2]+"</br></br>Users Response: "+response_sequence;
             }
             if (game_state == ENTER_MUSEUM) {
-                inv = invSimple(inventory);
+                inv = castInv(inventory);
                 temp = OUTPUT_PRINTOUT(inv, select);
-                if (user) {
+                if (user && LOW_ITEMS.includes(inventory[(select)-1*2]) == true) {
                     user = false;
-                    game_state = AFTER_TUTORIAL
+                    selected_item = select-1;
+                    game_state = ITEM_SELECTED
+                    select = 1
+                } else {
+                    user = false;
                 }
                 document.getElementById("output").innerHTML = "Welcome to the Museum, this is where you can process and sell some of the items you have obtained. You can choice to process any items within your inventory or just sell the items. </br>"+temp;
             }
+            if (game_state == ITEM_SELECTED) {
+                item_select = 2;
+                if (user) {
+                    user = false;
+                    if (item_select == 2 && select == 1) {
+
+                    }
+                }
+                document.getElementById("output").innerHTML = "What would you like to do with this "+inventory[selected_item*2]+"?</br><b>Process.</b>";
+            }
             if (game_state == INVENTORY) {
-                document.getElementById("output").innerHTML = "These are the items that are in your inventory.</br></br>"+displayInv();
+                document.getElementById("output").innerHTML = "These are the items that are in your inventory.</br></br>"+displayInv(inventory);
                 if (user) {
                     game_state = AFTER_TUTORIAL;
                     user = false;
                 }
             }
-        }
-
-        function invSimple(array) {
-            let simp_inv = [];
-            for (i = 0; i < array.length()/2; i++) {
-                simp_inv.push(array[i*2]);
+            if (game_state == UPGRADES) {
+                if (select == 1) {
+                    temp = String("REQUIRES "+tool_belt[1]+" GOLD");
+                } else if (select == 2) {
+                    temp = String("REQUIRES "+tool_belt[3]+" IRON");
+                } else {
+                    temp = String("REQUIRES "+tool_belt[5]+" IRON");
+                }
+                document.getElementById("output").innerHTML = "This is the upgrade menu, this is where you can upgrade your different devices. Scanner increases potential to locate more geodes, pickaxe and shovel increase the chance to get smaller sequences.</br>"+temp+OUTPUT_PRINTOUT(tool_belt, select);
+                if (user) {
+                    user = false;
+                    if (select == 1 && removeItem("Gold ore", tool_belt[5])) {
+                        removeItem("Gold ore", tool_belt[1]);
+                        tool_belt[1] += 1;
+                    } else if (select == 2 && removeItem("Iron ore", tool_belt[5])) {
+                        removeItem("Iron ore", tool_belt[3]);
+                        tool_belt[3] += 1;
+                    } else if (select == 3 && removeItem("Iron ore", tool_belt[5])) {
+                        removeItem("Iron ore", tool_belt[5]);
+                        tool_belt[5] += 1;
+                    }
+                }
             }
-            return simp_inv;
         }
 
         function OUTPUT_PRINTOUT (items, selected) {
             let temp = "";
+            if (selected > items.length) {
+                selected = items.length;
+            }
             for (x = 0; x < items.length; x++) {
                 if (selected-1 == x) {
                     temp = String(temp+"</br><b>"+items[x]+"</b>")
@@ -445,17 +485,21 @@
             var keyCode = event.keyCode;
 
             if (game_state >= AFTER_TUTORIAL || game_state < START_GAME) {
-                if (keyCode == 87 && select > 1) {
+                if (keyCode == 87 && select > 1 ) {
                     select -= 1
-                } else if (keyCode == 83 && select < OUTPUT_ITEMS[item_select].length) {
+                } else if (keyCode == 83 && (select < OUTPUT_ITEMS[item_select].length || select <= inventory.length/2)) {
                     select += 1
                 } else if (keyCode == 13 || keyCode == 32) {
                     user = true;
                 }
             }
 
-            if ((keyCode == 8 || keyCode == 27) && (game_state == START_GAME)) {
+            if ((keyCode == 8 || keyCode == 27) && (game_state == START_GAME || game_state == ENTER_MUSEUM || game_state == INVENTORY || game_state == UPGRADES)) {
                 game_state = AFTER_TUTORIAL;
+            }
+
+            if ((keyCode == 8 || keyCode == 27) && (game_state == ITEM_SELECTED)) {
+                game_state = ENTER_MUSEUM;
             }
 
             if (response_sequence.length != sequence.length && game_state == SEQUENCE_RESPONSE) {
@@ -498,7 +542,7 @@
         }
 
         function addItem(item, quantity, quality) {
-            if (inventory.includes(item)) {
+            if (inventory.includes(item) || inventory.includes(item+" (Q"+quality+")")) {
                 for (i = 0; i < inventory.length/2; i++) {
                     if (inventory[i*2] == String(item+" (Q"+quality+")") && quality != 0) {
                         inventory[i*2+1] += 1;
@@ -513,6 +557,21 @@
                 inventory.push(item);
                 inventory.push(quantity);
             }
+        }
+
+        function removeItem(item, quantity) {
+            if (inventory.includes(item)) {
+                for (i = 0; i < inventory.length/2; i++) {
+                    if (inventory[i*2] == item && inventory[i*2+1] > quantity) {
+                        inventory[i*2+1] = inventory[i*2+1]-quantity;
+                        return true;
+                    } else if (inventory[i*2] == item && inventory[i*2+1] == quantity) {
+                        inventory.splice(i*2, 2);
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         function randomItem(itemC, quality) {
@@ -551,16 +610,28 @@
             }
         }
 
-        function displayInv() {
+        function displayInv(array) {
             text = "";
-            for (i = 0; i < inventory.length/2; i ++) {
-                if (inventory[i*2+1] == 1) {
-                    text = String(text+" "+inventory[i*2]);
+            for (i = 0; i < array.length/2; i ++) {
+                if (array[i*2+1] == 1) {
+                    text = String(text+" "+array[i*2]);
                 } else {
-                    text = String(text+" "+inventory[i*2+1]+" "+inventory[i*2])
+                    text = String(text+" "+array[i*2+1]+" "+array[i*2])
                 }
-                if (inventory.length-1 != i*2+1) {
+                if (array.length-1 != i*2+1) {
                     text = text+","
+                }
+            }
+            return text;
+        }
+
+        function castInv(array) {
+            text = [];
+            for (i = 0; i < array.length/2; i ++) {
+                if (array[i*2+1] == 1) {
+                    text.push(array[i*2]);
+                } else {
+                    text.push(array[i*2+1]+" "+inventory[i*2]);
                 }
             }
             return text;
