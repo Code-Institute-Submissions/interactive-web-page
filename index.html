@@ -105,6 +105,7 @@
         const SEQUENCE_RESPONSE = 1.3;
         const ENTER_MUSEUM = 2
         const ITEM_SELECTED = 2.1;
+        const PROCESS_ITEM = 2.2;
         const INVENTORY = 3;
         const UPGRADES = 4;
 
@@ -123,6 +124,8 @@
 
             document.getElementById("name").innerHTML = "???:"
             document.getElementById("output").innerHTML = OUTPUT[game_state*10]+"<br><br> Press any button to continue.";
+            setInterval(main, 20);
+            setInterval(draw, 20);
             setInterval(alph, 20);
         }
 
@@ -150,7 +153,11 @@
             }
             if (game_state == START_GAME) {
                 item_select = 1;
-                temp = OUTPUT_PRINTOUT(OUTPUT_ITEMS[item_select], select);
+                let available = [];
+                for (i = 0; i < tool_belt[1]; i++) {
+                    available.push(OUTPUT_ITEMS[item_select][i])
+                }
+                temp = OUTPUT_PRINTOUT(available, select);
                 if (user) {
                     user = false;
                     game_state = DURING_GAME;
@@ -187,7 +194,19 @@
                 if (user) {
                     user = false;
                     if (item_select == 2 && select == 1) {
-
+                        removeItem(inventory[select*2], 1)
+                        game_state = PROCESS_ITEM
+                    }
+                }
+                document.getElementById("output").innerHTML = "What would you like to do with this "+inventory[selected_item*2]+"?</br><b>Process.</b>";
+            }
+            if (game_state == PROCESS_ITEM) {
+                item_select = 2;
+                if (user) {
+                    user = false;
+                    if (item_select == 2 && select == 1) {
+                        removeItem(inventory[select*2], 1)
+                        game_state = PROCESS_ITEM
                     }
                 }
                 document.getElementById("output").innerHTML = "What would you like to do with this "+inventory[selected_item*2]+"?</br><b>Process.</b>";
@@ -200,6 +219,10 @@
                 }
             }
             if (game_state == UPGRADES) {
+                let array = [];
+                for (i = 0; i < tool_belt.length/2; i++) {
+                    array.push(tool_belt[i*2]+" || Level "+tool_belt[i*2+1])
+                }
                 if (select == 1) {
                     temp = String("REQUIRES "+tool_belt[1]+" GOLD");
                 } else if (select == 2) {
@@ -207,7 +230,7 @@
                 } else {
                     temp = String("REQUIRES "+tool_belt[5]+" IRON");
                 }
-                document.getElementById("output").innerHTML = "This is the upgrade menu, this is where you can upgrade your different devices. Scanner increases potential to locate more geodes, pickaxe and shovel increase the chance to get smaller sequences.</br>"+temp+OUTPUT_PRINTOUT(tool_belt, select);
+                document.getElementById("output").innerHTML = "This is the upgrade menu, this is where you can upgrade your different devices. Scanner increases potential to locate more geodes, pickaxe and shovel increase the chance to get smaller sequences.</br>"+temp+OUTPUT_PRINTOUT(array, select);
                 if (user) {
                     user = false;
                     if (select == 1 && removeItem("Gold ore", tool_belt[5])) {
@@ -262,8 +285,6 @@
                 map = new map_Gen(2, 95, 85, MapX, MapY);
             }
             geode_Gen();
-            setInterval(main, 20);
-            setInterval(draw, 20);
         }
 
         function main() {
@@ -542,7 +563,7 @@
         }
 
         function addItem(item, quantity, quality) {
-            if (inventory.includes(item) || inventory.includes(item+" (Q"+quality+")")) {
+            if (inventory.includes(item)) {
                 for (i = 0; i < inventory.length/2; i++) {
                     if (inventory[i*2] == String(item+" (Q"+quality+")") && quality != 0) {
                         inventory[i*2+1] += 1;
