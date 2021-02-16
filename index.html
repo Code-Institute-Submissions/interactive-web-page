@@ -8,11 +8,13 @@
         body {
             overflow-x: hidden;
             overflow-y: hidden;
+            min-width: 500px;
+            min-height: 600px;
             font-family: "Courier new", "Cambria";
         }
         canvas {
             width: 92%;
-            height: auto;
+            height: 50%;
             overflow-y: hidden;
             overflow-x: hidden;
             border: 1px black solid;
@@ -24,7 +26,7 @@
             padding: 20px;
             border: 1px black solid;
             width: auto;
-            height: 60vh;
+            height: 70vh;
         }
         section {
             width: 100%-20px;
@@ -85,7 +87,7 @@
         let cooldown = 0;
         let diggable = false;
 
-        let inventory = ["Stone", 5, "Geode (Q75)", 1, "Gold ore", 7, "Iron ore", 9]; // Inventory array to hold the items the user obtains from the terrain.
+        let inventory = []; // Inventory array to hold the items the user obtains from the terrain.
 
         let biome_v = ""; // String for the biome_value of the terrain.
 
@@ -101,6 +103,7 @@
         let SEQUENCE_COMPLETE = false;
         let sequence_len = 0;
         let response_sequence = [];
+        let museum = [];
 
         let item_select = 0;
 
@@ -203,13 +206,14 @@
                 document.getElementById("output").innerHTML = OUTPUT[game_state*10]+temp;
             }
             if (game_state == VIEW_INVENTORY) {
-                inv = castInv(inventory);
+                inv = castMuseum(inventory);
                 temp = OUTPUT_PRINTOUT(inv, select);
-                if (user && LOW_ITEMS.includes(inventory[(select-1)*2]) == false) {
+                if (user) {
                     user = false;
-                    selected_item = inventory[(select-1)*2];
-                    game_state = ITEM_SELECTED
-                    select = 1
+                    let itemIndex = inventory.indexOf(inv[select-1])
+                    selected_item = inventory[itemIndex];
+                    game_state = ITEM_SELECTED;
+                    select = 1;
                 } else {
                     user = false;
                 }
@@ -231,6 +235,13 @@
             }
             if (game_state == PROCESS_RES_SEQ) {
                 document.getElementById("output").innerHTML = OUTPUT[game_state*10]+" You have managed to find "+"</br></br>Users Response: "+response_sequence;
+            }
+            if (game_state == VIEW_MUSEUM) {
+                if (user) {
+                    user = false;
+                    game_state = ENTER_MUSEUM
+                }
+                document.getElementById("output").innerHTML = "This is the museum, you can see how well you have fixed up items. </br>"+museum;
             }
             if (game_state == INVENTORY) {
                 document.getElementById("output").innerHTML = "These are the items that are in your inventory.</br></br>"+displayInv(inventory);
@@ -327,10 +338,10 @@
             if ((game_state == SECOND_GAME || game_state == SEQUENCE_RESPONSE || game_state == PROCESS_ITEM_SEQ || game_state == PROCESS_RES_SEQ) && time % 25 == 0 ) {
                 if (game_state == SECOND_GAME || game_state == SEQUENCE_RESPONSE) {
                     clear();
-                    let CALC_X = Math.round(dig_attempt[0]/size_X)
-                    let CALC_Y = Math.round(dig_attempt[1]/size_Y)
+                    let CALC_X = range(Math.round(dig_attempt[0]/size_X), 2, zone[0]/size_X-size_X)
+                    let CALC_Y = range(Math.round(dig_attempt[1]/size_Y), 2, zone[1]/size_Y-size_Y)
                     map_Render(biome_v, CALC_X+size_X,  CALC_Y+size_Y,  CALC_X-size_X, CALC_Y-size_Y, size_X, size_Y);
-                    draw(1, true, "hsl(0, 0%, 0%)", "", dig_attempt[0]-size_X, dig_attempt[1]-size_Y, size_X*2, size_Y*2)
+                    draw(1, true, "hsl(0, 0%, 0%)", "", dig_attempt[0]-size_X, dig_attempt[1]-size_Y, size_X*2, size_Y*2);
                 }
                 
                 if (sequence_len == 0) {
@@ -415,6 +426,7 @@
                             item_quality = Math.round(item_quality-(50/sequence_len));
                         }
                     }
+                    museum.push(selected_item.split("(")[0]+" (Q"+item_quality+")")
                     sequence = [];
                     response_sequence = [];
                     game_state = ENTER_MUSEUM;
@@ -454,7 +466,7 @@
 
         function dig_Render() {
             for (i = 0; i < dig_attempt.length/2; i++) {
-                draw(1, true, "hsl(0, 0%, 0%)", "", dig_attempt[i*2]-size_X, dig_attempt[i*2+1]-size_Y, size_X*2, size_Y*2);
+                draw(1, true, "hsl(0, 0%, 50%)", "", dig_attempt[i*2]-size_X, dig_attempt[i*2+1]-size_Y, size_X*2, size_Y*2);
             }
         }
 
@@ -727,6 +739,16 @@
                     text.push(array[i*2]);
                 } else {
                     text.push(array[i*2+1]+" "+inventory[i*2]);
+                }
+            }
+            return text;
+        }
+
+        function castMuseum(array) {
+            text = [];
+            for (i = 0; i < array.length/2; i ++) {
+                if (LOW_ITEMS.includes(array[i*2]) == false) {
+                    text.push(array[i*2]);
                 }
             }
             return text;
