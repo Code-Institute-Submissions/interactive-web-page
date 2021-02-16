@@ -7,27 +7,34 @@
     <style>
         body {
             overflow-x: hidden;
+            overflow-y: hidden;
             font-family: "Courier new", "Cambria";
         }
         canvas {
-            width: 100%;
+            width: 92%;
             height: auto;
             overflow-y: hidden;
             overflow-x: hidden;
             border: 1px black solid;
+            bottom: 20px;
+            left: 20px;
+            position: absolute;
         }
         main {
             padding: 20px;
             border: 1px black solid;
+            width: auto;
+            height: 60vh;
         }
         section {
-            width: auto;
-            height: auto;
+            width: 100%-20px;
+            height: 92%;
             border: 1px black dashed;
-            text-indent: 20px;
-            padding: 10px;
-            margin-bottom: 10px;
+            text-indent: 40px;
+            text-align: center;
+            padding: 20px;
             user-select: none;
+            position: relative;
         }
         header {
             text-align: center;
@@ -35,6 +42,7 @@
         }
         footer {
             text-align: center;
+            user-select: none;
         }
     </style>
 
@@ -49,8 +57,8 @@
         <section>
             <b id="name"></b>
             <span id="output"></span>
+            <canvas onmousemove="getMousePos(event, canvas)" id="Window">This element is unsupported.</canvas>
         </section>
-        <canvas onmousemove="getMousePos(event, canvas)" id="Window">This element is unsupported.</canvas>
     </main>
     <footer>
         <span>Are you having trouble with this game? I have made a quick peice of information to assit you on your digging. <a target="_blank" href="html/help.html">Click here.</a></span>
@@ -103,15 +111,18 @@
         const DURING_GAME = 1.1;
         const SECOND_GAME = 1.2;
         const SEQUENCE_RESPONSE = 1.3;
-        const ENTER_MUSEUM = 2
+        const ENTER_MUSEUM = 2;
         const ITEM_SELECTED = 2.1;
-        const PROCESS_ITEM = 2.2;
+        const PROCESS_ITEM_SEQ = 2.2;
+        const PROCESS_RES_SEQ = 2.3;
+        const VIEW_INVENTORY = 2.4;
+        const VIEW_MUSEUM = 2.5;
         const INVENTORY = 3;
         const UPGRADES = 4;
 
 
         const LOW_ITEMS = ["Dirt", "Stone", "Gold ore", "Iron ore", "Copper ore"]
-        const OUTPUT_ITEMS = [["World Map", "Museum", "Inventory", "Upgrade"],["Plains", "Desert", "Forest", "Swamp", "Mountain", "Taiga", "Jungle", "Red Desert", "Savannah", "Marsh"], ["Process"]]
+        const OUTPUT_ITEMS = [["World Map", "Museum", "Inventory", "Upgrade"],["Plains", "Desert", "Forest", "Swamp", "Mountain", "Taiga", "Jungle", "Red Desert", "Savannah", "Marsh"], ["View Items", "Check Museum"], ["Process"]]
         const OUTPUT = ["Welcome to DIG UP! This is a game developed by me just to be presented for my course. The game is only going to have some simple little mini-games and will be just a little bit of fun.", "Hello. I am your assistant, just call me Alph. I will tell you about the game and how to play.", "W and S allow for navigation in menu screens and other text related displays.", "Spacebar and Enter will be the confirm button. But whilst in game will allow the user to visually display the locations of items in the ground.", "Q and E will be part of a digging mini-game, once you have placed down all of your dig locations, I will tell you the way on which you must dig the terrain to prevent items from being damaged.", "A, S and D will also act as a quick time response event within salvaging and recovering geodes and other items.", "Within this part of the screen this will allow for menu select and from here you can chose to see your inventory, also go and find resources and also salvage or obtained items.","What would you like to do?", "", "", "What biome would you like to explore?", "Now you will have a series of attempts to find the items within the terrian, using spacebar you can see the locations of the items.", "Now you will be given a sequence of characters which will have to be repeated back to be able to dig up the locations you have chosen.", "Now can you repeat the sequence that was just produced.", ""];
 
         function innit() {
@@ -177,11 +188,26 @@
                 document.getElementById("output").innerHTML = OUTPUT[game_state*10]+" You have manageed to find "+inventory[inventory.length-2]+"</br></br>Users Response: "+response_sequence;
             }
             if (game_state == ENTER_MUSEUM) {
+                item_select = 2;
+                temp = OUTPUT_PRINTOUT(OUTPUT_ITEMS[item_select], select);
+                if (user) {
+                    user = false;
+                    if (select == 1) {
+                        game_state = VIEW_INVENTORY;
+                    }
+                    if (select == 2) {
+                        game_state = VIEW_MUSEUM;
+                    }
+                    select = 1;
+                }
+                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+temp;
+            }
+            if (game_state == VIEW_INVENTORY) {
                 inv = castInv(inventory);
                 temp = OUTPUT_PRINTOUT(inv, select);
-                if (user && LOW_ITEMS.includes(inventory[(select)-1*2]) == true) {
+                if (user && LOW_ITEMS.includes(inventory[(select-1)*2]) == false) {
                     user = false;
-                    selected_item = select-1;
+                    selected_item = inventory[(select-1)*2];
                     game_state = ITEM_SELECTED
                     select = 1
                 } else {
@@ -194,22 +220,17 @@
                 if (user) {
                     user = false;
                     if (item_select == 2 && select == 1) {
-                        removeItem(inventory[select*2], 1)
-                        game_state = PROCESS_ITEM
+                        removeItem(selected_item, 1)
+                        game_state = PROCESS_ITEM_SEQ
                     }
                 }
-                document.getElementById("output").innerHTML = "What would you like to do with this "+inventory[selected_item*2]+"?</br><b>Process.</b>";
+                document.getElementById("output").innerHTML = "What would you like to do with this "+selected_item+"</br><b>Process?</b>";
             }
-            if (game_state == PROCESS_ITEM) {
-                item_select = 2;
-                if (user) {
-                    user = false;
-                    if (item_select == 2 && select == 1) {
-                        removeItem(inventory[select*2], 1)
-                        game_state = PROCESS_ITEM
-                    }
-                }
-                document.getElementById("output").innerHTML = "What would you like to do with this "+inventory[selected_item*2]+"?</br><b>Process.</b>";
+            if (game_state == PROCESS_ITEM_SEQ) {
+                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+"</br></br>Sequence: "+sequence;
+            }
+            if (game_state == PROCESS_RES_SEQ) {
+                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+" You have managed to find "+"</br></br>Users Response: "+response_sequence;
             }
             if (game_state == INVENTORY) {
                 document.getElementById("output").innerHTML = "These are the items that are in your inventory.</br></br>"+displayInv(inventory);
@@ -303,19 +324,21 @@
                 }
             }
 
-            if ((game_state == SECOND_GAME || game_state == SEQUENCE_RESPONSE) && time % 25 == 0 ) {
-                clear();
-                let CALC_X = Math.round(dig_attempt[0]/size_X)
-                let CALC_Y = Math.round(dig_attempt[1]/size_Y)
-                map_Render(biome_v, CALC_X+size_X,  CALC_Y+size_Y,  CALC_X-size_X, CALC_Y-size_Y, size_X, size_Y);
-                draw(1, true, "hsl(0, 0%, 0%)", "", dig_attempt[0]-size_X, dig_attempt[1]-size_Y, size_X*2, size_Y*2)
+            if ((game_state == SECOND_GAME || game_state == SEQUENCE_RESPONSE || game_state == PROCESS_ITEM_SEQ || game_state == PROCESS_RES_SEQ) && time % 25 == 0 ) {
+                if (game_state == SECOND_GAME || game_state == SEQUENCE_RESPONSE) {
+                    clear();
+                    let CALC_X = Math.round(dig_attempt[0]/size_X)
+                    let CALC_Y = Math.round(dig_attempt[1]/size_Y)
+                    map_Render(biome_v, CALC_X+size_X,  CALC_Y+size_Y,  CALC_X-size_X, CALC_Y-size_Y, size_X, size_Y);
+                    draw(1, true, "hsl(0, 0%, 0%)", "", dig_attempt[0]-size_X, dig_attempt[1]-size_Y, size_X*2, size_Y*2)
+                }
                 
                 if (sequence_len == 0) {
                     sequence_len = (3+(Math.floor(Math.random()*count)));
                     SEQUENCE_COMPLETE = false;
                 }
                 
-                if (sequence.length != sequence_len) {
+                if (sequence.length != sequence_len && game_state == SECOND_GAME) {
                     let r = Math.random();
                     if (r > 0.5) {
                         sequence.push("Q");
@@ -324,14 +347,30 @@
                     }
                 }
 
-                if (sequence.length == sequence_len && game_state == SECOND_GAME && SEQUENCE_COMPLETE == false) {
+                if (sequence.length != sequence_len && game_state == PROCESS_ITEM_SEQ) {
+                    let r = Math.random();
+                    if (r > 0.66) {
+                        sequence.push("A");
+                    } else if (r > 0.33) {
+                        sequence.push("W");
+                    } else {
+                        sequence.push("D");
+                    }
+                }
+
+                if (sequence.length == sequence_len && SEQUENCE_COMPLETE == false) {
                     SEQUENCE_COMPLETE = true;
-                } else if (SEQUENCE_COMPLETE == true) {
-                    game_state = SEQUENCE_RESPONSE;
+                } else if (SEQUENCE_COMPLETE == true && (game_state != SEQUENCE_RESPONSE && game_state != PROCESS_RES_SEQ)) {
+                    if (game_state == SECOND_GAME) {
+                        game_state = SEQUENCE_RESPONSE;
+                    }
+                    if (game_state == PROCESS_ITEM_SEQ) {
+                        game_state = PROCESS_RES_SEQ;
+                    }
                     SEQUENCE_COMPLETE = false;
                 }
                 
-                if (response_sequence.length == sequence.length) {
+                if ((response_sequence.length == sequence_len && sequence_len != 0) && (game_state == SECOND_GAME || game_state == SEQUENCE_RESPONSE)) {
                     let item_quality = 100;
                     for (i = 0; i < response_sequence.length; i++) {
                         if (sequence[i] != response_sequence[i]) {
@@ -357,9 +396,29 @@
                     sequence_len = 0;
                 }
 
-                if (dig_attempt.length == 0) {
+                if (dig_attempt.length == 0 && game_state == SECOND_GAME) {
                     game_state = AFTER_TUTORIAL;
                     clear();
+                    let item_quality = 100;
+                    for (i = 0; i < response_sequence.length; i++) {
+                        if (sequence[i] != response_sequence[i]) {
+                            item_quality = Math.round(item_quality-(50/sequence_len));
+                        }
+                    }
+                }
+
+                if ((response_sequence.length == sequence_len && sequence_len != 0) && (game_state == PROCESS_ITEM_SEQ || game_state == PROCESS_RES_SEQ)) {
+                    let item_quality = selected_item.split("Q")[1];
+                    item_quality = parseInt(item_quality);
+                    for (i = 0; i < response_sequence.length; i++) {
+                        if (sequence[i] != response_sequence[i]) {
+                            item_quality = Math.round(item_quality-(50/sequence_len));
+                        }
+                    }
+                    sequence = [];
+                    response_sequence = [];
+                    game_state = ENTER_MUSEUM;
+                    sequence_len = 0;
                 }
             }
 
@@ -520,15 +579,30 @@
             }
 
             if ((keyCode == 8 || keyCode == 27) && (game_state == ITEM_SELECTED)) {
+                game_state = VIEW_INVENTORY;
+            }
+            if ((keyCode == 8 || keyCode == 27) && (game_state == VIEW_INVENTORY || game_state == VIEW_MUSEUM)) {
                 game_state = ENTER_MUSEUM;
             }
 
-            if (response_sequence.length != sequence.length && game_state == SEQUENCE_RESPONSE) {
+            if (response_sequence.length < sequence_len && game_state == SEQUENCE_RESPONSE) {
                 if (keyCode == 81) {
                     response_sequence.push("Q");
                 }
                 if (keyCode == 69) {
                     response_sequence.push("E");
+                }
+            }
+
+            if (response_sequence.length < sequence_len && game_state == PROCESS_RES_SEQ) {
+                if (keyCode == 87) {
+                    response_sequence.push("W");
+                }
+                if (keyCode == 65) {
+                    response_sequence.push("A");
+                }
+                if (keyCode == 68) {
+                    response_sequence.push("D");
                 }
             }
         }
