@@ -42,6 +42,8 @@ I would also like to create a recovery mini-game with a sequence of key presses.
 
 In the website I have tried to create a very simple but effective website. This means that my main idea was to focus on the functionality of the webpage instead. I wanted to make sure that a portray a theme and style to user but dont over fill and over complicate the webpage. I want a website that would hold the game and the game would be able to be presented to the user. I wanted to make sure that the game and webpage are all in the screens view and try and make everything fit within the the screen without creating an overflow.
 
+I keep messing around with the style of the website. I thought that the version before this worked better but this feels and looks like a game. It just never felt as though the text and the canvas where in some form of relevent layout but now it feels as though the canvas is part of the game. I choice to make the canvas move just to allow for an overflow on the text box cause your items that you obtain can really fill the text box.  Now with the new layout change I feel as though an empty canvas doesn't impact the game as the text shows that the user has a form of response. I will add a feature that is when a user has one of each gem within the museum then I will thank them.
+
 <h3 id="4"></h3>Deployment<hr>
 
 <h3 id="5">Users Experiences</h3><hr>
