@@ -4,11 +4,14 @@ This is the readme.md file for my website that has been created for the interact
 <h3>Index</h3><hr>
 This is my index for easy navigation around my readme.md file. This is to help the user be able to find out the information on which they may need.
 
-I <a href="1">Introduction</a></br>
-II <a href="2"></a></br>
-III <a href="3"></a></br>
-IV <a href="4"></a></br>
-V <a href="5"></a></br>
+I <a href="#1">Introduction</a></br>
+II <a href="#2">Initial Idea</a></br>
+III <a href="#3">Development</a></br>
+IV <a href="#4">Deployment</a></br>
+V <a href="#5">Testing</a></br>
+VI <a href="#6">User Experiences</a></br>
+VII <a href="#7">Updating</a></br>
+VIII <a href="#8">Bibliography</a></br>
 
 
 <h3 id="1">Introduction</h3><hr>
@@ -48,6 +51,8 @@ I keep messing around with the style of the website. I thought that the version 
 
 I chose to create this game on github to allow for me to have a history of different versions of the production of my game, also chose to do this to be able to use the inside features of github to place the webpage on a cloud server so that it can be access online. This will allow me to place the webpage on the cloud for the accessor. This allows for me to also test the website on a cloud based instance, to see how it behaves when on the web.
 
+I wan to create a game that meets its requirements, has been fleshed out and has a form of progression and can allow for the user to be able to progress through the game or get new and interesting differences in the game. The way on which I add a uniqueness to the game is by adding the ability to upgrade the the scanner and find and locate new biomes that have different yields.
+
 <h3 id="4">Deployment</h3><hr>
 I have made several changes to my CSS to make sure that the webpage is designed correctly and that the theme that I wanted is present within different sizes and scales. I want to make sure that the theme is unable to be effected by the scale or size of the webpage. I want to make sure that the theme is continious and does not change depending on how the webpage is viewed. I want to make sure that the webpage keeps its true layout as this webpage is designed to have a use of a p tag and a canvas which must be kept within a set space as these are part of the game. I dont want to allow for the website to lose its theme. I have a footer that contains a help page as well which would be kept below the text and canvas. This allows for the user if they are confused to seek help on a different page. I feel as though my game is straight forward enough to not need the help page but some people may require extra help with the game. Also along with that the game does have some features that are very specific. Biomes have set chances which vary depending on your biome type. This is able to help the player find and locate the items that they may want to find.
 
@@ -55,6 +60,39 @@ To create this webpage I have used the GitPod edittor software to be able to pro
 
 The theme on which I have chosen is able to give the user the exact theme that I was after but is not overly complicated so that the user can still focus on the game. Functionality was my main aim within this webpage and game I want to make sure that the whole game is worked out correctly and is able to be controlled the way on which I intended.
 
+When creating the game idea, I needed to add a feature to the mini-games that makes the game progressively harder but also give the player an ability to actually be able to rebalanace the game out. I wanted to give the user the ability to upgrade there items. I had chosen to add a tool belt as well which would hold the items on which the player uses whilst on there adventures. I wanted to also present the player with a form of progression and allow for them to be able to be given more items depending on how far they have gotten in the game. The idea is that the scanner can only reach so far and once upgraded you are able to reach further. Once upgraded you can adventure to biomes in different locations.
+
 <h3 id="5">Testing</h3><hr>
+Within testing I have placed my JS code through the JSHint to find any mistakes on which I may have found whilst programming. I have spent time correcting a series of mistakes that where made, these vary from simple mistakes with declarations and semi-colons. This application can be found at <a href="https://jshint.com/">JSHint</a> and was used to help with the testing of the code.
+
+Along with the use of this application, I have also spent several hours testing the game whilst playing to make sure that it works as it was programmed and intended to work. Once I have completed the programming I will test the game again and correct anything that doesn't work as indended.
+
+When it comes with testing I tried and forced my game to originally break and fail and then working with these fails instead of bypassing these fails I chose to work around these fails reaccuring as well. I made several of my features able to handle extended inputs and makes sure that data types and other forms are correctly used and converted where needed. I wanted to see how many issues I can find with my code and force it to take extended forms of information. There are some functions created to help prevent these issues. I created a range function that takes a value, minimum and maximum and can make sure that numerical values are caught before they exceed the values they can possibly be. This is how I contain some of the data that is present on my game. One example where there is issues with numeric values exeeding was when you enter the second half of the digging mini-game. When generating a small section of terrain around the users input, it used to crash the ctx renderer. Now the values can not exceed the value of the canvas. I have forced the user to use mouse inputs to initite the getMouse function to allow for me to generate and create the values needed to understand the size of the canvas. The sizes of the canvas where used to control the users  responses and what is generated for the user. I wanted to make sure that the user can not break the game and the game can not misunderstand user inputs as this can ruin and effect a users experience. Along with this I made sure that most of the data types are kept within a specific type and tried to make sure that the text print outs can not incorrectly print the data that is required.
+
+I have tried to keep the names of the variables and functions to a relevant name. I dont like overcreating functions and variables and like to make sure that functions are all used within the code. I usually create several universal functions at the beginning of my code to help with data control and management, like the range feature. These features help with making sure that you keep your data types and values under control whilst coding.
+
+I had chosen to create my text and canvas seperatly cause at the beginning of the development I had found that text does not correctly render on the canvas with the style and font that I would like. I want text that is more telegable and easier to read as I myself need text to be clear and not overly complicated. I had also set my theme to keep consistant even on my help page as I like to make sure that my entire websites are created and all related with style and equal functionality. With the production of a webpage I feel that it is relevant to make sure that the page doesnt draw the users attention to other area or effects the users view in a negative fashion. Having a colored background was something I had tested at one point but realised that it was actual more benefitial to just leave it so that the text and canvas are mainly not effected by external properties.
+
+I wanted to make sure that the text for the dialog box is exactly right. The style of the canvas and text box are my priority. I wanted to make sure that the text that is displayed is in a great and consistant theme and the text that is displayed doesn't overlap, clip or leave the text box. I wanted to also make sure that the text isn't overly scaled. I wanted to make sure that the name on the box is indented and bold to show to the user that its more like a dialog box.
+
+To deal with data that is either empty or invalid within some instances the user can not perform a task as an if condition would prevent that or the game would deny a response that is invalid and empty. I have found several instances whilst programming where the game has had issues with handling invalid or empty information and I have now corrected or fixed those issues and errors.
 
 <h3 id="6">Users Experiences</h3><hr>
+Whilst creating this concept I worked from the rules on which the course set for me which are to create a memory based game, and create some form of response to the users. I had kept them as a focus when creating my idea. I wanted to also set a series of rules of myself. I wanted to create a game that would have a series of mini-games and also have a little more to the story. Along with these features I wanted to also make sure that the game did have a range of features which can alter the game as it may progress. I have changed the mechanics as the game progressed through development. I wanted to just do a few differences to make sure that the game felt the way on which I want it to feel.
+
+I believe that the game meets all of these rules and requirements that I and the course have set and it feels really and works really good.
+
+Along with my own experience of the game I also have asked for the opinion of a few friends to let me know what they think about my game.
+
+When it comes to my experience of the game, I feel as though this meets everything that I was planning with this game. This game meets the rules that have been placed on my work and also gives the user a good experience when it comes to the mini-games. I feel as though the execution was great and that the game can display both responses and also display to the user how well they have done in the game. Also shows a form of progression and shows that the user has managed to get further in the game. This webpage has got great readability and allows for users with requirements to be able to read the font. Both font styles that I have selected have only got slight font styling.
+
+Some of my friends have reviewed the style of the website. They said that they can see how the style works with the game and said that they enjoy the execution of the webpage. I can see that the controls are slightly difficult to use but beyond that the game has high functionality.
+
+<h3 id="7">Updates</h3><hr>
+This section just links to the update log, this log is where I state changes on which I have made to the game and website. <a href="Update.md">Update Log</a>
+
+
+<h3 id="8">Bibliography</h3><hr>
+These are the links on which I have used to find help on my the JS language.<br>
+<a href="https://www.w3schools.com/js/default.asp">W3Schools</a> - (https://www.w3schools.com/js/default.asp) I have used this webpage to be able to just enquire about issues and errors that I have had with my program and also used it to understand features of JS to be able to understand the differences.<br>
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">MDN Web Docs</a> - (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined) - I have used this website to search for general information about JS just to understand how JS uses different functions and generally how to use JS. I have used several programming languages and just like to find the differences within the langauges.<br>
