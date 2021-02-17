@@ -1,7 +1,10 @@
-<h2>Interactive Website Development</h2><hr>
+<h2>Interactive Website Development</h2>
 This is the readme.md file for my website that has been created for the interactive website development module. This game that I have created is to try and use my knowledge of JS, CSS and HTML to create a simple but yet effective series of mememory games. My idea was to create a game that contained a way of rewarding the player no matter what, but there reward value would improve depending on how well they complete each of the mini-games.
 
-<h3>Index</h3><hr>
+My website can be accessed on the GitHub cloud at this address: <a href="https://roy-finch.github.io/interactive-web-page/"> Online Webpage</a>.
+My wireframe can be located at this address: <a href="https://miro.com/app/board/o9J_lVBKfRY=/"> Wireframe</a>
+
+<h3>Index</h3>
 This is my index for easy navigation around my readme.md file. This is to help the user be able to find out the information on which they may need.
 
 I <a href="#1">Introduction</a></br>
@@ -14,7 +17,7 @@ VII <a href="#7">Updating</a></br>
 VIII <a href="#8">Bibliography</a></br>
 
 
-<h3 id="1">Introduction</h3><hr>
+<h3 id="1">Introduction</h3>
 Initially I wanted to create a game on which would present the user with a series of different memory games, I didn't want to create a simple game with one mechanic and only be able to test the player in one way. I also wanted to try and create the game using only JS, CSS and HTML. I wanted to try and keep the website on which holds the game simple and yet effective so that it maybe able to be resized and changed depending on what the user would like to do. The functionality and simplisity of the two webpages make them very versatile.
 
 I wanted to create a game that had the ability to inform the player on how to complete the different mini-games but, I had realised that text when created on a canvas can behave in a series of strange and interesting ways to. I chose to go back to my original idea and use an external text box for the Guide to use to talk to the player.
@@ -25,7 +28,7 @@ One of the current things I am trying to create and implements is for some visua
 
 My idea was to create a game on which the user can be rewarded from. In this game depending on how well the user completes a sequence of mini-games. Dependings on how well they are rewarded. If they incorrectly place a marker in the wrong location they would be rewarded with biome-dependent items like stone, dirt, sand and wood. If they are to complete the minigames to a good standard they would be able to recieve better products. The idea was to have the items presented to the user in a museum when completed. But I thought of create another mini-game in there where you can recover the items you find. Once recovered they would be stored in the museum as a record of how the user has done and how well they have managed to compelte the mini-game sequence. Some form of scoring system will be placed on each item. Maybe a percentage of how well the item is, will be the way it is presented. This would be a mean of how well the user has done during the different mini-games.
 
-<h3 id="2">Initial Idea</h3><hr>
+<h3 id="2">Initial Idea</h3>
 My initial idea was to try and create a game that had some form of terrain, which would be generated randomly. This would mean that the functions to call out terrain genration and rendering would have to be versatile. I would then be able to create the different biomes within the game. Originally, I wanted to make the difficulty increase over time, but instead I want to make the game become more difficult when the user successfully completes a full mini-game. I may create an average of how well the user performs and from these statistics make the game demanding on the user but custom to how well they can complete the mini-games. I want to make the game able to become hard but not impossible. I want to try and present the user with a challenge that is equal to how well they can compelte the game.
 
 The way on which the game would judge difficulty is through how accurate and how quick the user is. I will use the percentage of how accurate the user is to give them bonus time on the scan. This would be to allow the user to have bonus time if they are very inaccurate but if they succeed with the 2 second scan time I may decrease it. Then also I will try and create some form of time boundaries for the user. If they are quick or slow then create an understanding of how fast they are. Maybe creating a mean value of the users time they take and how accurate they are overal.
@@ -34,7 +37,7 @@ I am trying to implement a function on which the user is able to select any loca
 
 I have created a plan of my idea on a wireframe to be able to see a general theme and functionality of the game, I wanted to make the theme game focused. I generally stuck to the idea of the theme that I had listed on the wireframe I had just changed a few features later on in the game, as the canvas and text file felt seperated and behavied wierdly when the webpage is small. I had thought of including the text file with the canvas inside it so that the two elements are grouped together. I like how it feels now as the canvas feels as though it doesnt always have to be grab the players attention.
 
-<h3 id="3">Development</h3><hr>
+<h3 id="3">Development</h3>
 Whilst programming the website I want to make it able to be accessed from a series of devices. I would like to try and create a game with a fundemental premise, but be able to be played by many different people. Some of the functions on which I have created may be seen as very overly complicated but I want to be able to generate a series of noticable differences within terrain and within the mini-game so that the user can notice the differences and notice some form of progression. I am going to try and place a series of requirements on different levels and biome types so that the user would have a series of goals. What I may do is some form of achievement system or a goal so that there is a guidence or way for the user to understand what to do.
 
 Within this game I would like to make the controls basic but yet effective. I am trying to focus the development for just PC and at a later point, if possible begin to adapt the controls for other devices. I want to be able to produce a game that can give the user some forms of responses. I have chosen create an introduction for the user to be able to understand the functionality of the different keys that are being used. At some point I would like to fill in the canvas in different instances to make sure that its not a blank canvas. This can be done in several ways. I would like to create some form of visual representation of what the user is hovering over or going to select. This could be in a form some sort of imagery based on the idea that the text holds. I would like to create some sort of backpack, to represent the inventory, and other examples being a map or some sort of scroll. This would present more to the user and I feel as though this would make the user more interested within the game.
@@ -53,7 +56,7 @@ I chose to create this game on github to allow for me to have a history of diffe
 
 I wan to create a game that meets its requirements, has been fleshed out and has a form of progression and can allow for the user to be able to progress through the game or get new and interesting differences in the game. The way on which I add a uniqueness to the game is by adding the ability to upgrade the the scanner and find and locate new biomes that have different yields.
 
-<h3 id="4">Deployment</h3><hr>
+<h3 id="4">Deployment</h3>
 I have made several changes to my CSS to make sure that the webpage is designed correctly and that the theme that I wanted is present within different sizes and scales. I want to make sure that the theme is unable to be effected by the scale or size of the webpage. I want to make sure that the theme is continious and does not change depending on how the webpage is viewed. I want to make sure that the webpage keeps its true layout as this webpage is designed to have a use of a p tag and a canvas which must be kept within a set space as these are part of the game. I dont want to allow for the website to lose its theme. I have a footer that contains a help page as well which would be kept below the text and canvas. This allows for the user if they are confused to seek help on a different page. I feel as though my game is straight forward enough to not need the help page but some people may require extra help with the game. Also along with that the game does have some features that are very specific. Biomes have set chances which vary depending on your biome type. This is able to help the player find and locate the items that they may want to find.
 
 To create this webpage I have used the GitPod edittor software to be able to produce this game. I have used JS to program and create the functionality to my game. I wanted to make sure that there is a set response system. So that the guide is one of the main forms of response.
@@ -62,7 +65,7 @@ The theme on which I have chosen is able to give the user the exact theme that I
 
 When creating the game idea, I needed to add a feature to the mini-games that makes the game progressively harder but also give the player an ability to actually be able to rebalanace the game out. I wanted to give the user the ability to upgrade there items. I had chosen to add a tool belt as well which would hold the items on which the player uses whilst on there adventures. I wanted to also present the player with a form of progression and allow for them to be able to be given more items depending on how far they have gotten in the game. The idea is that the scanner can only reach so far and once upgraded you are able to reach further. Once upgraded you can adventure to biomes in different locations.
 
-<h3 id="5">Testing</h3><hr>
+<h3 id="5">Testing</h3>
 Within testing I have placed my JS code through the JSHint to find any mistakes on which I may have found whilst programming. I have spent time correcting a series of mistakes that where made, these vary from simple mistakes with declarations and semi-colons. This application can be found at <a href="https://jshint.com/">JSHint</a> and was used to help with the testing of the code.
 
 Along with the use of this application, I have also spent several hours testing the game whilst playing to make sure that it works as it was programmed and intended to work. Once I have completed the programming I will test the game again and correct anything that doesn't work as indended.
@@ -77,7 +80,7 @@ I wanted to make sure that the text for the dialog box is exactly right. The sty
 
 To deal with data that is either empty or invalid within some instances the user can not perform a task as an if condition would prevent that or the game would deny a response that is invalid and empty. I have found several instances whilst programming where the game has had issues with handling invalid or empty information and I have now corrected or fixed those issues and errors.
 
-<h3 id="6">Users Experiences</h3><hr>
+<h3 id="6">Users Experiences</h3>
 Whilst creating this concept I worked from the rules on which the course set for me which are to create a memory based game, and create some form of response to the users. I had kept them as a focus when creating my idea. I wanted to also set a series of rules of myself. I wanted to create a game that would have a series of mini-games and also have a little more to the story. Along with these features I wanted to also make sure that the game did have a range of features which can alter the game as it may progress. I have changed the mechanics as the game progressed through development. I wanted to just do a few differences to make sure that the game felt the way on which I want it to feel.
 
 I believe that the game meets all of these rules and requirements that I and the course have set and it feels really and works really good.
@@ -88,11 +91,11 @@ When it comes to my experience of the game, I feel as though this meets everythi
 
 Some of my friends have reviewed the style of the website. They said that they can see how the style works with the game and said that they enjoy the execution of the webpage. I can see that the controls are slightly difficult to use but beyond that the game has high functionality.
 
-<h3 id="7">Updates</h3><hr>
+<h3 id="7">Updates</h3>
 This section just links to the update log, this log is where I state changes on which I have made to the game and website. <a href="Update.md">Update Log</a>
 
 
-<h3 id="8">Bibliography</h3><hr>
+<h3 id="8">Bibliography</h3>
 These are the links on which I have used to find help on my the JS language.<br>
 <a href="https://www.w3schools.com/js/default.asp">W3Schools</a> - (https://www.w3schools.com/js/default.asp) I have used this webpage to be able to just enquire about issues and errors that I have had with my program and also used it to understand features of JS to be able to understand the differences.<br>
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">MDN Web Docs</a> - (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined) - I have used this website to search for general information about JS just to understand how JS uses different functions and generally how to use JS. I have used several programming languages and just like to find the differences within the langauges.<br>
