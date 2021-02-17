@@ -13,14 +13,12 @@
             font-family: "Courier new", "Cambria";
         }
         canvas {
-            width: 92%;
+            width: 100%;
             height: 50%;
             overflow-y: hidden;
             overflow-x: hidden;
             border: 1px black solid;
-            bottom: 20px;
-            left: 20px;
-            position: absolute;
+            margin-top: 20px;
         }
         main {
             padding: 20px;
@@ -107,7 +105,7 @@
 
         let item_select = 0;
 
-        let tool_belt = ["Pocket Scanner", 1, "Pickaxe", 1, "Shovel", 1];
+        let tool_belt = ["Pocket Scanner", 123, "Pickaxe", 1, "Shovel", 1];
 
         const AFTER_TUTORIAL = 0.7;
         const START_GAME = 1;
@@ -124,7 +122,7 @@
         const UPGRADES = 4;
 
 
-        const LOW_ITEMS = ["Dirt", "Stone", "Gold ore", "Iron ore", "Copper ore"]
+        const LOW_ITEMS = ["Dirt", "Stone", "Gold ore", "Iron ore", "Copper ore", "Sand", "Lapis Lazuli", "Amber"]
         const OUTPUT_ITEMS = [["World Map", "Museum", "Inventory", "Upgrade"],["Plains", "Desert", "Forest", "Swamp", "Mountain", "Taiga", "Jungle", "Red Desert", "Savannah", "Marsh"], ["View Items", "Check Museum"], ["Process"]]
         const OUTPUT = ["Welcome to DIG UP! This is a game developed by me just to be presented for my course. The game is only going to have some simple little mini-games and will be just a little bit of fun.", "Hello. I am your assistant, just call me Alph. I will tell you about the game and how to play.", "W and S allow for navigation in menu screens and other text related displays.", "Spacebar and Enter will be the confirm button. But whilst in game will allow the user to visually display the locations of items in the ground.", "Q and E will be part of a digging mini-game, once you have placed down all of your dig locations, I will tell you the way on which you must dig the terrain to prevent items from being damaged.", "A, S and D will also act as a quick time response event within salvaging and recovering geodes and other items.", "Within this part of the screen this will allow for menu select and from here you can chose to see your inventory, also go and find resources and also salvage or obtained items.","What would you like to do?", "", "", "What biome would you like to explore?", "Now you will have a series of attempts to find the items within the terrian, using spacebar you can see the locations of the items.", "Now you will be given a sequence of characters which will have to be repeated back to be able to dig up the locations you have chosen.", "Now can you repeat the sequence that was just produced.", ""];
 
@@ -168,7 +166,7 @@
             if (game_state == START_GAME) {
                 item_select = 1;
                 let available = [];
-                for (i = 0; i < tool_belt[1]; i++) {
+                for (i = 0; i < range(tool_belt[1], 1, 10); i++) {
                     available.push(OUTPUT_ITEMS[item_select][i])
                 }
                 temp = OUTPUT_PRINTOUT(available, select);
@@ -182,13 +180,13 @@
                 document.getElementById("output").innerHTML = OUTPUT[game_state*10]+temp;
             }
             if (game_state == DURING_GAME) {
-                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+"</br></br>Attempts: "+(attempts-(Math.floor(dig_attempt.length/2)));
+                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+"<br><br>Attempts: "+(attempts-(Math.floor(dig_attempt.length/2)));
             }
             if (game_state == SECOND_GAME) {
-                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+"</br></br>Sequence: "+sequence;
+                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+"<br><br>Sequence: "+sequence;
             }
             if (game_state == SEQUENCE_RESPONSE) {
-                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+" You have manageed to find "+inventory[inventory.length-2]+"</br></br>Users Response: "+response_sequence;
+                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+" You have manageed to find "+inventory[inventory.length-2]+"<br><br>Users Response: "+response_sequence;
             }
             if (game_state == ENTER_MUSEUM) {
                 item_select = 2;
@@ -203,7 +201,7 @@
                     }
                     select = 1;
                 }
-                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+temp;
+                document.getElementById("output").innerHTML = "This is the Museum, in here you can view items you have recovered or recover an item."+temp;
             }
             if (game_state == VIEW_INVENTORY) {
                 inv = castMuseum(inventory);
@@ -217,7 +215,7 @@
                 } else {
                     user = false;
                 }
-                document.getElementById("output").innerHTML = "Welcome to the Museum, this is where you can process and sell some of the items you have obtained. You can choice to process any items within your inventory or just sell the items. </br>"+temp;
+                document.getElementById("output").innerHTML = "Welcome to the Museum, this is where you can process and sell some of the items you have obtained. You can choice to process any items within your inventory or just sell the items. <br>"+temp;
             }
             if (game_state == ITEM_SELECTED) {
                 item_select = 2;
@@ -228,23 +226,23 @@
                         game_state = PROCESS_ITEM_SEQ
                     }
                 }
-                document.getElementById("output").innerHTML = "What would you like to do with this "+selected_item+"</br><b>Process?</b>";
+                document.getElementById("output").innerHTML = "What would you like to do with this "+selected_item+"<br><b>Process?</b>";
             }
             if (game_state == PROCESS_ITEM_SEQ) {
-                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+"</br></br>Sequence: "+sequence;
+                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+"<br><br>Sequence: "+sequence;
             }
             if (game_state == PROCESS_RES_SEQ) {
-                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+" You have managed to find "+"</br></br>Users Response: "+response_sequence;
+                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+" You have managed to find "+"<br><br>Users Response: "+response_sequence;
             }
             if (game_state == VIEW_MUSEUM) {
                 if (user) {
                     user = false;
                     game_state = ENTER_MUSEUM
                 }
-                document.getElementById("output").innerHTML = "This is the museum, you can see how well you have fixed up items. </br>"+museum;
+                document.getElementById("output").innerHTML = "This is the museum, you can see how well you have fixed up items. <br>"+museum;
             }
             if (game_state == INVENTORY) {
-                document.getElementById("output").innerHTML = "These are the items that are in your inventory.</br></br>"+displayInv(inventory);
+                document.getElementById("output").innerHTML = "These are the items that are in your inventory.<br><br>"+displayInv(inventory);
                 if (user) {
                     game_state = AFTER_TUTORIAL;
                     user = false;
@@ -262,7 +260,7 @@
                 } else {
                     temp = String("REQUIRES "+tool_belt[5]+" IRON");
                 }
-                document.getElementById("output").innerHTML = "This is the upgrade menu, this is where you can upgrade your different devices. Scanner increases potential to locate more geodes, pickaxe and shovel increase the chance to get smaller sequences.</br>"+temp+OUTPUT_PRINTOUT(array, select);
+                document.getElementById("output").innerHTML = "This is the upgrade menu, this is where you can upgrade your different devices. Scanner increases potential to locate more geodes, pickaxe and shovel increase the chance to get smaller sequences.<br>"+temp+OUTPUT_PRINTOUT(array, select);
                 if (user) {
                     user = false;
                     if (select == 1 && removeItem("Gold ore", tool_belt[5])) {
@@ -286,9 +284,9 @@
             }
             for (x = 0; x < items.length; x++) {
                 if (selected-1 == x) {
-                    temp = String(temp+"</br><b>"+items[x]+"</b>")
+                    temp = String(temp+"<br><b>"+items[x]+"</b>")
                 } else {
-                    temp = String(temp+"</br>"+items[x])
+                    temp = String(temp+"<br>"+items[x])
                 }
             }
             return temp;
@@ -296,26 +294,27 @@
 
         function biome(value) {
             if ("Plains") {
-                map = new map_Gen(2, 50, 25, MapX, MapY);
+                map = new map_Gen(2, 50, 40, MapX, MapY);
             } else if ("Desert") {
                 map = new map_Gen(2, 95, 85, MapX, MapY);
             } else if ("Forest") {
-                map = new map_Gen(5, 50, 25, MapX, MapY);
+                map = new map_Gen(2, 20, 10, MapX, MapY);
             } else if ("Swamp") {
-                map = new map_Gen(2, 25, 15, MapX, MapY);
+                map = new map_Gen(2, 55, 25, MapX, MapY);
             } else if ("Mountain") {
-                map = new map_Gen(2, 85, 60, MapX, MapY);
+                map = new map_Gen(5, 60, 35, MapX, MapY);
             } else if ("Jungle") {
-                map = new map_Gen(2, 30, 20, MapX, MapY);
+                map = new map_Gen(2, 40, 25, MapX, MapY);
             } else if ("Taiga") {
-                map = new map_Gen(2, 95, 85, MapX, MapY);
+                map = new map_Gen(2, 40, 30, MapX, MapY);
             } else if ("Red Desert") {
-                map = new map_Gen(2, 95, 85, MapX, MapY);
+                map = new map_Gen(2, 90, 80, MapX, MapY);
             } else if ("Savannah") {
-                map = new map_Gen(2, 95, 85, MapX, MapY);
+                map = new map_Gen(2, 80, 70, MapX, MapY);
             } else if ("Marsh") {
-                map = new map_Gen(2, 95, 85, MapX, MapY);
+                map = new map_Gen(2, 40, 25, MapX, MapY);
             }
+            count = 3+Math.floor(tool_belt[3]+tool_belt[5]/3)
             geode_Gen();
         }
 
@@ -405,6 +404,7 @@
                     response_sequence = [];
                     game_state = SECOND_GAME;
                     sequence_len = 0;
+                    user = false;
                 }
 
                 if (dig_attempt.length == 0 && game_state == SECOND_GAME) {
@@ -431,6 +431,7 @@
                     response_sequence = [];
                     game_state = ENTER_MUSEUM;
                     sequence_len = 0;
+                    user = false;
                 }
             }
 
@@ -498,13 +499,29 @@
                     temp_val = map[x][y]-time/100;
 
                     if (biome == "Plains") {
-                        color = "hsl(122, 54%, "+temp_val+"%)";
+                        color = "hsl(112, 71%, "+temp_val+"%)";
                     } else if (biome == "Desert") {
-                        color = "hsl(64, 85%, "+temp_val+"%)";
+                        color = "hsl(59, 81%, "+temp_val+"%)";
                     } else if (biome == "Forest") {
-                        color = "hsl(122, 54%, "+temp_val+"%)";
+                        color = "hsl(115, 64%, "+temp_val+"%)";
                     } else if (biome == "Swamp") {
-                        color = "hsl(145, 88%, "+temp_val+"%)";
+                        color = "hsl(115, 64%, "+temp_val+"%)";
+                    } else if (biome == "Mountain" && temp_val < 45) {
+                        color = "hsl(115, 70%, "+temp_val+"%)";
+                    } else if (biome == "Mountain" && temp_val > 45) {
+                        color = "hsl(115, 0%, "+temp_val+"%)";
+                    } else if (biome == "Tiaga") {
+                        color = "hsl(143, 62%, "+temp_val+"%)";
+                    } else if (biome == "Jungle") {
+                        color = "hsl(95, 75%, "+temp_val+"%)";
+                    } else if (biome == "Red Desert") {
+                        color = "hsl(43, 84%, "+temp_val+"%)";
+                    } else if (biome == "Savannah") {
+                        color = "hsl(74, 49%, "+temp_val+"%)";
+                    } else if (biome == "Marsh" && temp_val > 32) {
+                        color = "hsl(112, 39%, "+temp_val+"%)";
+                    } else if (biome == "Marsh") {
+                        color = "hsl(220, 39%, "+temp_val+"%)";
                     } 
 
                     draw(1, true, color, "", x*size_x, y*size_z, size_x, size_z);
@@ -689,8 +706,10 @@
                     addItem("Dirt", 1, 0);
                 } else if (r > 0.4) {
                     addItem("Copper ore", 1, 0);
-                } else if (r > 0) {
+                } else if (r > 0.2) {
                     addItem("Stone", 1, 0);
+                } else if (r > 0.1) {
+                    addItem("Sand", 1, 0);
                 }
             }
             if (itemC == "Plains") {
@@ -699,20 +718,138 @@
                     addItem("Geode", 1, quality);
                 } else if (r > 0.4) {
                     addItem("Copper ore", 1, 0);
-                } else if (r > 0.3) {
-                    addItem("Tin", 1, 0);
                 } else if (r > 0.2) {
-                    addItem("Fossil", 1, quality);
-                } else if (r > 0.19) {
                     addItem("Iron ore", 1, 0);
-                } else if (r > 0.18) {
+                }else if (r > 0.1) {
                     addItem("Gold ore", 1, 0);
-                } else if (r > 0.16) {
-                    addItem("Diamond", 1, quality);
-                }  else if (r > 0.15) {
+                }
+            }
+            if (itemC == "Desert") {
+                r = Math.random();
+                if (r > 0.5) {
+                    addItem("Fossil", 1, quality);
+                } else if (r > 0.4) {
+                    addItem("Copper ore", 1, 0);
+                } else if (r > 0.2) {
+                    addItem("Iron ore", 1, 0);
+                }else if (r > 0.1) {
+                    addItem("Gold ore", 1, 0);
+                }
+            }
+            if (itemC == "Forest") {
+                r = Math.random();
+                if (r > 0.6) {
                     addItem("Ruby", 1, quality);
-                }  else if (r > 0) {
+                } else if (r > 0.5) {
+                    addItem("Lapis Lazuli", 1, 0);
+                } else if (r > 0.4) {
+                    addItem("Copper ore", 1, 0);
+                } else if (r > 0.2) {
+                    addItem("Iron ore", 1, 0);
+                }else if (r > 0.1) {
+                    addItem("Gold ore", 1, 0);
+                }
+            }
+            if (itemC == "Swamp") {
+                r = Math.random();
+                if (r > 0.6) {
+                    addItem("Amber", 1, quality);
+                } else if (r > 0.5) {
+                    addItem("Lapis Lazuli", 2, 0);
+                } else if (r > 0.4) {
+                    addItem("Copper ore", 2, 0);
+                } else if (r > 0.2) {
+                    addItem("Iron ore", 1, 0);
+                } else if (r > 0.1) {
+                    addItem("Gold ore", 1, 0);
+                }  else if (r > 0.03) {
+                    addItem("Iron ore", 2, 0);
+                } else if (r > 0.0) {
+                    addItem("Gold ore", 2, 0);
+                }
+            }
+            if (itemC == "Mountain") {
+                r = Math.random();
+                if (r > 0.6) {
+                    addItem("Emerald", 1, quality);
+                } else if (r > 0.5) {
+                    addItem("Sapphire", 2, 0);
+                } else if (r > 0.4) {
+                    addItem("Geode", 2, 0);
+                } else if (r > 0.2) {
+                    addItem("Iron ore", 1, 0);
+                } else if (r > 0.1) {
+                    addItem("Gold ore", 1, 0);
+                }  else if (r > 0.05) {
+                    addItem("Iron ore", 2, 0);
+                } else if (r > 0.0) {
+                    addItem("Gold ore", 2, 0);
+                }
+            }
+            if (itemC == "Taiga") {
+                r = Math.random();
+                if (r > 0.6) {
+                    addItem("Emerald", 1, quality);
+                } else if (r > 0.5) {
+                    addItem("Sapphire", 2, 0);
+                } else if (r > 0.4) {
+                    addItem("Copper ore", 2, 0);
+                } else if (r > 0.2) {
+                    addItem("Iron ore", 1, 0);
+                } else if (r > 0.1) {
+                    addItem("Gold ore", 1, 0);
+                }  else if (r > 0.05) {
+                    addItem("Iron ore", 2, 0);
+                } else if (r > 0.0) {
+                    addItem("Gold ore", 2, 0);
+                }
+            }
+            if (itemC == "Jungle") {
+                r = Math.random();
+                if (r > 0.7) {
                     addItem("Geode", 1, quality);
+                } else if (r > 0.6) {
+                    addItem("Sapphire", 1, 0);
+                } else if (r > 0.5) {
+                    addItem("Emerald", 1, 0);
+                } else if (r > 0.4) {
+                    addItem("Ruby", 1, 0);
+                } else if (r > 0.3) {
+                    addItem("Iron ore", 1, 0);
+                }  else if (r > 0.25) {
+                    addItem("Gold ore", 2, 0);
+                } else if (r > 0.2) {
+                    addItem("Iron ore", 2, 0);
+                } else if (r > 0.19) {
+                    addItem("Iron ore", 3, 0);
+                } else if (r > 0.185) {
+                    addItem("Gold ore", 3, 0);
+                } else if (r > 0.15) {
+                    addItem("Fossil", 2, 0);
+                } else if (r > 0.2) {
+                    addItem("Iron ore", 2, 0);
+                } else if (r > 0.04) {
+                    addItem("Amber", 2, 0);
+                } else if (r > 0.0) {
+                    addItem("Diamond", 2, 0);
+                }
+            }
+            if (itemC == "Red Desert" || itemC == "Savannah" || itemC == "Marsh") {
+                r = Math.random();
+                if (r > 0.6) {
+                    addItem("Geode", 2, quality);
+                } else if (r > 0.1) {
+                    addItem("Fossil", 2, 0);
+                } else if (r > 0.08) {
+                    addItem("Iron ore", 2, 0);
+                } else if (r > 0.06) {
+                    addItem("Gold ore", 2, 0);
+                } else if (r > 0.04) {
+                    addItem("Diamond", 2, 0);
+                }  else if (r > 0.02) {
+                    addItem("Emerald", 2, 0);
+                } else if (r > 0.0) {
+                    addItem("Ruby", 2, 0);
                 }
             }
         }
