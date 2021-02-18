@@ -127,7 +127,7 @@
 
         const LOW_ITEMS = ["Dirt", "Stone", "Gold ore", "Iron ore", "Copper ore", "Sand", "Lapis Lazuli", "Amber"];
         const OUTPUT_ITEMS = [["World Map", "Museum", "Inventory", "Upgrade"],["Plains", "Desert", "Forest", "Swamp", "Mountain", "Taiga", "Jungle", "Red Desert", "Savannah", "Marsh"], ["View Items", "Check Museum"], ["Process"]];
-        const OUTPUT = ["Hello. I am your assistant, just call me Alph. I will tell you about the game and how to play.", "W, S and A / Q and E are keys that are used within the quicktime events to allow for you to repeat sequences that will be produced during a series of mini-games.", "Space Bar and Enter will be the confirm button, whilst the ESC and backbutton will allow you to move back out of a menu screen, you can not leave the mini-games though. Spacebar is also used to display the locations of areas of interest on your map so you can find rarer items.", "The W and S keys are also used within the menu screens to allow for navigation and movement.", "There are a series of menus, world map allows you to go out and dig up items within the terrain, whilst museum allows you to process rare items you have found, inventory just displays the items you have found and the upgrade screen will let you upgrade the items in your tool belt."];
+        const OUTPUT = ["Welcome to DIG UP! This is a game developed by me just to be presented for my course. The game is only going to have some simple little mini-games and will be just a little bit of fun.+<br><br> Press any button to continue.", "Hello. I am your assistant, just call me Alph. I will tell you about the game and how to play.", "W, S and A / Q and E are keys that are used within the quicktime events to allow for you to repeat sequences that will be produced during a series of mini-games.", "Space Bar and Enter will be the confirm button, whilst the ESC and backbutton will allow you to move back out of a menu screen, you can not leave the mini-games though. Spacebar is also used to display the locations of areas of interest on your map so you can find rarer items.", "The W and S keys are also used within the menu screens to allow for navigation and movement.", "There are a series of menus, world map allows you to go out and dig up items within the terrain, whilst museum allows you to process rare items you have found, inventory just displays the items you have found and the upgrade screen will let you upgrade the items in your tool belt."];
 
         function innit() {
             canvas = document.getElementById("Window");
@@ -138,7 +138,7 @@
             document.addEventListener("click", Click);
 
             document.getElementById("name").innerHTML = "???:";
-            document.getElementById("output").innerHTML = "Welcome to DIG UP! This is a game developed by me just to be presented for my course. The game is only going to have some simple little mini-games and will be just a little bit of fun.+<br><br> Press any button to continue.";
+            document.getElementById("output").innerHTML = [OUTPUT[Math.floor(game_state*10)]];
             setInterval(main, 20);
             setInterval(draw, 20);
             setInterval(alph, 20);
@@ -182,7 +182,7 @@
                 document.getElementById("output").innerHTML = "What biome would you like to explore?"+temp;
             }
             if (game_state == DURING_GAME) {
-                document.getElementById("output").innerHTML = "Now you will have a series of attempts to find the items within the terrian, using spacebar you can see the locations of the items.<br><br>Attempts: "+geode+(attempts-(Math.floor(dig_attempt.length/2)));
+                document.getElementById("output").innerHTML = "Now you will have a series of attempts to find the items within the terrian, using spacebar you can see the locations of the items.<br><br>Attempts: "+(attempts-(Math.floor(dig_attempt.length/2)));
             }
             if (game_state == SECOND_GAME) {
                 document.getElementById("output").innerHTML = "Now you will be given a sequence of characters which will have to be repeated back to be able to dig up the locations you have chosen. Now can you repeat the sequence that was just produced.<br><br>Sequence: "+sequence;
@@ -231,10 +231,10 @@
                 document.getElementById("output").innerHTML = "What would you like to do with this "+selected_item+"<br><b>Process?</b>";
             }
             if (game_state == PROCESS_ITEM_SEQ) {
-                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+"<br><br>Sequence: "+sequence;
+                document.getElementById("output").innerHTML = "You will be given a sequence that you must repeat to process the item you have selected.<br><br>Sequence: "+sequence;
             }
             if (game_state == PROCESS_RES_SEQ) {
-                document.getElementById("output").innerHTML = OUTPUT[game_state*10]+" You have managed to find "+"<br><br>Users Response: "+response_sequence;
+                document.getElementById("output").innerHTML = "Can you now repeat the response on which was just generated?<br><br>Users Response: "+response_sequence;
             }
             if (game_state == VIEW_MUSEUM) {
                 if (user) {

@@ -14,3 +14,6 @@ When settling on the name for the game I always wanted to be called Dig somethin
 I have addded upgrades to allow for the user to be able to have an ability to have progression. These upgrades can allow for them to find new locations and be able to unlock new biomes.
 Biomes now have set data chances to give the user different items depending on the biome you choice. Also I have added the different biomes and made each biome able to render with different colours and other features.
 I have ran a JS test and corrected any issues that have been flagged by the software there was only 30 warnings and no extensive errors or issues. The warnings where for some missing declarations and semi-colons.
+Changed the way on which the text is displayed, only the tutorial information is kept within the OUTPUT const and now the way I casted the outputs using game_state*10 is now rounded to prevent the information from causing undefined issues. I also made some changes to the text and made the text a little simpler.
+I fixed the scan feature it was disabled after using the JS software and I had mislabelled two of my variables. I have now corrected those variables and the scan feature now works.
+Added text reponses on the Museum mini-game. They where originally set up take a response from the OUTPUT array but instead are given a set response.

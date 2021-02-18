@@ -95,6 +95,33 @@ Some of my friends have reviewed the style of the website. They said that they c
 <h3 id="7">Screenshots of Final Game</h3>
 Within this section I will include screen shots of the final game and explain how the game works and what I have tried to do to set the styles and functions within the game.
 
+![img](screenshots/screenshot_1.PNG)
+This is a screenshot of the DIGUP startup page, this is the screen that the user would see as soon as they access the webpage. The page has no overflow and is set to be scalled and themed respectfully. Recently to help with text overflow the canvas has been changed so that the border is now hidden. The text that is present is a welcome message to the user. The footer is a little bit of text that tells the user if they need help, there is a webpage link. The link is too a second, partially hidden webpage that opens a help.html file in a seperate tab. This contains information about the game and gives the user a very watered down guide about the game.
+
+![img](screenshots/screenshot_2.PNG)
+The theme and webpage stays the same. The text is a very simple hello my name is to introduce the user to a guide. I do this to make the webpage feel a little bit more personal. The guides name was Alph, I settled with this as I originally wanted to make his name an acronym for something wierd or silly but settled on making the game simplified.
+
+![img](screenshots/screenshot_3.PNG)
+![img](screenshots/screenshot_4.PNG)
+![img](screenshots/screenshot_5.PNG)
+the text begins to change and allows for the user to navigate through the tutorial text.
+
+![img](screenshots/screenshot_6.PNG)
+This is the main menu navigation and allows the user to be able to access the different features within the game. I wanted to allow the user to have a form of reward and progression and be able to control how hard the game can get. The game still progressively gets harder but the game does start to become easier if the user begins to alter the tool upgrades.
+
+![img](screenshots/screenshot_7.PNG)
+After starting the game you are given a series of attempts, randomly 3-4 and you can press space to locate points of interst. Once you have found the points of interest you can place markers down. You dont have to palce a marker on a point of interest. Once you have used all your attempts up you can now begin the second part of the mini-game.
+
+![img](screenshots/screenshot_8.PNG)
+I have made it so that on the map you begin to see a section of the terrain where you have clicked which is isolated from the rest. I thought this was needed within the game to just fill in the canvas and give the user a response. I didnt want to overcomplicate it. I just used resources that I already had. Map was rendered and the dig attempts where present so I just displayed areas around the dig attempt.
+
+![img](screenshots/screenshot_9.PNG)
+This is the upgrade screen and allows for the user to improve the tools that they are using during the mini-games. I wanted to allow them to unlock new and intersting biomes. Also the tool upgrades allows for you to balance the game out.
+
+![img](screenshots/screenshot_10.PNG)
+![img](screenshots/screenshot_11.PNG)
+These two screenshots are from the museum mini-game, these are taken from when you choice an item to process and also after the item has been processed. When the item is chosen it will generate a sequence and once the sequence has been generated it will ask the user to repeat it. The Q feature to all items is a quality number on how well the user has salvaged and obtained the an item. The game progressively gets harder so once they get into the game it is harder to obtain and recover items.
+
 <h3 id="8">Updates</h3>
 This section just links to the update log, this log is where I state changes on which I have made to the game and website. <a href="Update.md">Update Log</a>
 
