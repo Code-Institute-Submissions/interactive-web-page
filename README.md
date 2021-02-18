@@ -13,8 +13,9 @@ III <a href="#3">Development</a></br>
 IV <a href="#4">Deployment</a></br>
 V <a href="#5">Testing</a></br>
 VI <a href="#6">User Experiences</a></br>
-VII <a href="#7">Updating</a></br>
-VIII <a href="#8">Bibliography</a></br>
+VII <a href="#7">Screenshots of the Final Game</a></br>
+VIII <a href="#8">Updating</a></br>
+IX <a href="#9">Bibliography</a></br>
 
 
 <h3 id="1">Introduction</h3>
@@ -91,11 +92,14 @@ When it comes to my experience of the game, I feel as though this meets everythi
 
 Some of my friends have reviewed the style of the website. They said that they can see how the style works with the game and said that they enjoy the execution of the webpage. I can see that the controls are slightly difficult to use but beyond that the game has high functionality.
 
-<h3 id="7">Updates</h3>
+<h3 id="7">Screenshots of Final Game</h3>
+Within this section I will include screen shots of the final game and explain how the game works and what I have tried to do to set the styles and functions within the game.
+
+<h3 id="8">Updates</h3>
 This section just links to the update log, this log is where I state changes on which I have made to the game and website. <a href="Update.md">Update Log</a>
 
 
-<h3 id="8">Bibliography</h3>
+<h3 id="9">Bibliography</h3>
 These are the links on which I have used to find help on my the JS language.<br>
 <a href="https://www.w3schools.com/js/default.asp">W3Schools</a> - (https://www.w3schools.com/js/default.asp) I have used this webpage to be able to just enquire about issues and errors that I have had with my program and also used it to understand features of JS to be able to understand the differences.<br>
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">MDN Web Docs</a> - (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined) - I have used this website to search for general information about JS just to understand how JS uses different functions and generally how to use JS. I have used several programming languages and just like to find the differences within the langauges.<br>
