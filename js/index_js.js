@@ -1,26 +1,21 @@
 /*jshint esversion: 6 */
-let game_state = 0;
+let game_state = 0; // This is the game_state var it lets me understand what screen to present.
 
-const MapX = 50;
-const MapY = 50;
-const size_X = 6;
-const size_Y = 6;
+const MapX = 50, MapY = 50; // This is the main control variables for the map gen. Max size
+const size_X = 6, size_Y = 6; // size of each tile.
 
-let mouse_x = mouse_y = 0;
+let mouse_x, mouse_y; // empty variables for the mouse position.
 
-let temp = 0;
-let x = y = i = CALC_X = CALC_Y = temp_x = temp_y = temp_val = r = diff = 0;
-let map = inv = temp_pos = zone = [];
-let color = selected_item = text = "";
+let temp = 0; // temp var to cast too.
+let x, y, i, CALC_X, CALC_Y, temp_x, temp_y, temp_val, r, diff; // initialize variables that are needed in the script.
+let map = [], inv = [], temp_pos = [], zone = []; // initialize the needed arrays
+let color = "", selected_item = "", text = ""; // initialize the needed string casts
 
-let time = 0;
-let night = false;
-let scanned = false;
+let time = 0; // initialize the time variable that allows for me to understand a measurement of time.
+let night = false, scanned = false; // initialize the night variable and the scanned var. They are vars for time altering and when you have scanned.
 
-let count = 0;
-let active = 0;
-let cooldown = 0;
-let diggable = false;
+let count, active, cooldown; // initialize int variables
+let diggable = false; // initialize the diggable boolean, this is to tell the game you have scanned the terrain.
 
 let inventory = []; // Inventory array to hold the items the user obtains from the terrain.
 
@@ -32,17 +27,19 @@ let select = 1; // Used within the menu to check what the user is currently sele
 
 let geode = []; // Array for the XY of each geode location
 let dig_attempt = []; // previous dig locations
-let attempts = 3;
-let sequence = [];
-let SEQUENCE_COMPLETE = false;
-let sequence_len = 0;
-let response_sequence = [];
-let museum = [];
+let attempts = 3; // attempts that the user has
+let sequence = []; // initialize the sequence.
+let SEQUENCE_COMPLETE = false; // initialize boolean that is needed for the sequence comparison.
+let sequence_len = 0; // initialize the int value for the max length of the sequence
+let response_sequence = []; // initialize the array which is casted too when a user tries to repeat the sequence.
+let museum = []; // initialize the array to hold items that have been processed
 
-let item_select = 0;
+let item_select = 0; // this allows me to find that item is selected in the inventory.
 
-let tool_belt = ["Pocket Scanner", 1, "Pickaxe", 1, "Shovel", 1];
+let tool_belt = ["Pocket Scanner", 1, "Pickaxe", 1, "Shovel", 1]; // tool_belt for the items that the user is using in the game.
 
+
+// Constants for the different game states.
 const AFTER_TUTORIAL = 0.5;
 const START_GAME = 1;
 const DURING_GAME = 1.1;
@@ -61,6 +58,8 @@ const UPGRADES = 4;
 const LOW_ITEMS = ["Dirt", "Stone", "Gold ore", "Iron ore", "Copper ore", "Sand", "Lapis Lazuli", "Amber"];
 const OUTPUT_ITEMS = [["World Map", "Museum", "Inventory", "Upgrade"],["Plains", "Desert", "Forest", "Swamp", "Mountain", "Taiga", "Jungle", "Red Desert", "Savannah", "Marsh"], ["View Items", "Check Museum"], ["Process"]];
 const OUTPUT = ["Welcome to DIG UP! This is a game developed by me just to be presented for my course. The game is only going to have some simple little mini-games and will be just a little bit of fun.+<br><br> Press any button to continue.", "Hello. I am your assistant, just call me Alph. I will tell you about the game and how to play.", "W, S and A / Q and E are keys that are used within the quicktime events to allow for you to repeat sequences that will be produced during a series of mini-games.", "Space Bar and Enter will be the confirm button, whilst the ESC and backbutton will allow you to move back out of a menu screen, you can not leave the mini-games though. Spacebar is also used to display the locations of areas of interest on your map so you can find rarer items.", "The W and S keys are also used within the menu screens to allow for navigation and movement.", "There are a series of menus, world map allows you to go out and dig up items within the terrain, whilst museum allows you to process rare items you have found, inventory just displays the items you have found and the upgrade screen will let you upgrade the items in your tool belt."];
+
+// These are different string arrays that are used for different tasks and instances in my script. Maybe unconventional but helpful for me to change the text within the game portably.
 
 function innit() {
     canvas = document.getElementById("Window");
